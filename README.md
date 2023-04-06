@@ -186,3 +186,38 @@ function App() {
 export default App;
 ```
 
+#### Update value on Change / Key press and display (event handlers)
+
+```
+import { useState } from "react"
+export default function SearchBar() {
+  // State hook to store student value
+  const [student, setStudent] = useState(null);
+
+  // Function to update student state on input change
+  function updateStudentOnPress(event) {
+    setStudent(event.target.value);
+  }
+
+  return (
+    <div className="SearchBar">
+      {/* Display the value of student */}
+      <h1>{student}</h1>
+
+      {/* Input field for searching */}
+      <input
+        type="text"
+        onChange={updateStudentOnPress}
+        placeholder="Search...."
+        className="searchBarInput"
+      />
+      <br />
+
+      {/* Checkbox for showing only existing students */}
+      <input type="checkbox" className="searchBarCheckBox" />
+      <label>Only show existing students</label>
+    </div>
+  );
+}
+
+```
