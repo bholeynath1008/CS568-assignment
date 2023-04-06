@@ -95,7 +95,7 @@ export default CounterComponent;
 
 #### 1.2. Increase Age Counter using State and Props <u>Array list Object Age Counter</u>
 
-* When you change state, if the state is object, you have to copy it. Otherwise react will not know it was changed(when updating Age)
+* When you change state, if the state is Object or Array, you have to copy it. Otherwise react will not know it was changed(when updating Age)
 
 file: App.js
 
