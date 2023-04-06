@@ -1,4 +1,8 @@
 # Assignment-CS568-React-
+###  Best Resources:
+* https://react.dev/learn/
+* https://react.dev/learn/thinking-in-react
+
 #### 1. Counter using State and Props
 
 file: App.js
@@ -154,5 +158,31 @@ function CounterComponent(props) {
 
 // Export the CounterComponent function component as the default export
 export default CounterComponent; 
+```
+#### 2 Updater function it will update by 3.
+* React batches state updates
+
+```
+import { useState } from 'react';
+import './App.css';
+
+function App() {
+  const [cntr, setcntr] = useState(0);
+
+  return (
+    <div className="App">
+      <p>Counter: {cntr}</p>
+      <button onClick={
+        () => {
+          setcntr(cntr => cntr + 1);
+          setcntr(cntr => cntr + 1);
+          setcntr(cntr => cntr + 1);
+        }
+      }>+3</button>
+    </div>
+  );
+}
+
+export default App;
 ```
 
