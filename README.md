@@ -2,7 +2,93 @@
 ###  Best Resources:
 * https://react.dev/learn/
 * https://react.dev/learn/thinking-in-react
+--------
+### Examples of state in functional components:
+* 1. Counting component:
+```
+import React, { useState } from 'react';
 
+function Counter() {
+  const [count, setCount] = useState(0);
+
+  function handleClick() {
+    setCount(count + 1);
+  }
+
+  return (
+    <div>
+      <p>You clicked {count} times</p>
+      <button onClick={handleClick}>Click me</button>
+    </div>
+  );
+}
+
+```
+In this example, the useState hook is used to declare a state variable count with an initial value of 0. When the button is clicked, the handleClick function updates the state by calling setCount with the new value of count + 1. The component then re-renders with the updated count value.
+
+* 2. Input field component:
+```
+import React, { useState } from 'react';
+
+function InputField() {
+  const [inputValue, setInputValue] = useState('');
+
+  function handleChange(event) {
+    setInputValue(event.target.value);
+  }
+
+  return (
+    <div>
+      <input type="text" value={inputValue} onChange={handleChange} />
+      <p>You typed: {inputValue}</p>
+    </div>
+  );
+}
+
+```
+In this example, the useState hook is used to declare a state variable inputValue with an initial value of an empty string. When the input field changes, the handleChange function updates the state by calling setInputValue with the new value of event.target.value. The component then re-renders with the updated input value.
+
+* 3. Toggle component:
+```
+import React, { useState } from 'react';
+
+function Toggle() {
+  const [isOn, setIsOn] = useState(false);
+
+  function handleClick() {
+    setIsOn(!isOn);
+  }
+
+  return (
+    <div>
+      <button onClick={handleClick}>{isOn ? 'ON' : 'OFF'}</button>
+    </div>
+  );
+}
+
+```
+In this example, the useState hook is used to declare a state variable isOn with an initial value of false. When the button is clicked, the handleClick function updates the state by calling setIsOn with the opposite value of isOn. The component then re-renders with the updated toggle state.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+--------
 #### 1. Counter using State and Props
 
 file: App.js
