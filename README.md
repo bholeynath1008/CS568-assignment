@@ -69,6 +69,92 @@ function Toggle() {
 ```
 In this example, the useState hook is used to declare a state variable isOn with an initial value of false. When the button is clicked, the handleClick function updates the state by calling setIsOn with the opposite value of isOn. The component then re-renders with the updated toggle state.
 
+### Passing data/ Communication in React between components and siblings:
+
+* 1. Passing Data from Parent to Child:
+a. Using Props: You can pass data from the parent component to the child component by passing it as a prop. To do this, you need to define the prop in the child component and pass the data as a value of that prop in the parent component.
+
+b. Using Context: Another way to pass data from a parent component to a child component is by using Context. Context provides a way to share data between components without having to pass the data explicitly at every level of the component tree.
+
+* 2. Passing Data from Child to Parent:
+a. Using Callback Functions: You can pass a callback function from the parent component to the child component as a prop. The child component can then call this function with the data that needs to be passed back to the parent component.
+
+In the parent component:
+```
+export const ChildDataContext = React.createContext();
+
+function ParentComponent() {
+  const [data, setData] = useState('');
+
+  return (
+    <ChildDataContext.Provider value={{ data, setData }}>
+      <ChildComponent />
+      <p>Data from child component: {data}</p>
+    </ChildDataContext.Provider>
+  );
+}
+
+```
+
+In the child component:
+```
+function ChildComponent() {
+  const { setData } = useContext(ChildDataContext);
+
+  function handleClick() {
+    setData('Data from child component');
+  }
+
+  return <button onClick={handleClick}>Click me</button>;
+}
+
+```
+b. Using React Context API: Another way to pass data from a child component to a parent component is by using the React Context API. You can define a context in the parent component and then use the useContext hook in the child component to access the context and pass the data back to the parent component.
+
+* 3. Passing Data from Sibling to Siblings:
+
+In React, passing data from sibling to sibling can be achieved by lifting the state up to a common ancestor component and passing it down as props. Here's an example:
+
+
+```
+import React, { useState } from 'react';
+
+function Parent() {
+  const [data, setData] = useState('');
+
+  function handleDataChange(newData) {
+    setData(newData);
+  }
+
+  return (
+    <div>
+      <ChildA onDataChange={handleDataChange} />
+      <ChildB data={data} />
+    </div>
+  );
+}
+
+function ChildA(props) {
+  function handleChange(event) {
+    props.onDataChange(event.target.value);
+  }
+
+  return (
+    <div>
+      <input type="text" onChange={handleChange} />
+    </div>
+  );
+}
+
+function ChildB(props) {
+  return (
+    <div>
+      <p>Data from Child A: {props.data}</p>
+    </div>
+  );
+}
+
+```
 
 
 
