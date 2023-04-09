@@ -156,10 +156,11 @@ function ChildB(props) {
 
 ```
 ### useEffect, Clean up function, Lifecycle methods, StrictMode
+source: https://dmitripavlutin.com/react-useeffect-explanation/#4-side-effect-cleanup and https://dev.to/nibble/what-is-useeffect-hook-and-how-do-you-use-it-1p9c#effect and https://www.w3schools.com/react/react_useeffect.asp
 * useEffect hook is part of the react hooks API. If you are familiar with react life cycles, useEffect hook is equivalent to life cycle methods componentDidMount, componentDidUpdate and componentWillUnmount combined.useEffect hook was developed to address some of the challenges posed by life cycle methods of ES6 class components.
 * A functional React component uses props and/or state to calculate the output. If the component makes calculations that don't target the output value, then these calculations are named side-effects.
 * Examples of side-effects are fetch requests, manipulating DOM directly, using timer functions like setTimeout(), and more.
-source: https://dmitripavlutin.com/react-useeffect-explanation/#4-side-effect-cleanup and https://dev.to/nibble/what-is-useeffect-hook-and-how-do-you-use-it-1p9c#effect and https://www.w3schools.com/react/react_useeffect.asp
+
 ```
 * useEffect() hook is use to perform side effect tasks.
 useEffect() arguments
@@ -268,7 +269,68 @@ When running in React's Strict Mode, certain lifecycle methods and hooks are int
 2. On Second rendering Pass; React applies any necessary changes to the DOM and finalizes the rendering of the component. This helps to ensure that the component is fully up-to-date and that any changes or updates are reflected in the UI.
 It's important to note that not all lifecycle methods and hooks are executed twice in React's Strict Mode. Only certain methods, such as render(), componentDidMount(), componentDidUpdate(), and componentWillUnmount(), are affected by this behavior.
 
+### React MEMO
+source: https://www.youtube.com/watch?v=P_YwL0B8k7k&ab_channel=YoshitaJain  ,  https://www.w3schools.com/react/react_memo.asp
+```
+import React, { useEffect, useState } from "react";
 
+function App() {
+  const [add, setAdd] = useState(0);
+  const [minus, setMinus] = useState(100);
+
+  function muntiply() {
+    console.log("test memo");
+    return add * 10;
+  }
+
+  return (
+    <div className="App">
+      <h1>Learning MeMo</h1>
+      <div> {muntiply()}</div>
+      <h2>Add: {add}</h2>
+      <button onClick={() => setAdd(add + 1)}>ClickToAdd</button>
+      <h2>Minus: {minus}</h2>
+
+      <button onClick={() => setMinus(minus - 1)}>ClickToMinus</button>
+    </div>
+  )
+}
+export default App;
+```
+
+// Muntiply function is related here with add state variable. It is called when add button is called. But it updates while we clicks on Minus button also. This keep on called while calling substract. console.log("test memo will test")
+// To prevent this contionus updating we use test memo and update when the mentioned state is changed.
+// To fix this, we can use memo.
+// Use memoto keep the Todos component from needlessly re-rendering.
+
+```
+import React, { useEffect, useMemo, useState } from "react";
+
+function App() {
+  const [add, setAdd] = useState(0);
+  const [minus, setMinus] = useState(100);
+
+  const multiplication = useMemo(function muntiply() {
+    console.log("test memo");
+    return add * 10;
+  }, [add]);
+
+  return (
+    <div className="App">
+      <h1>Learning MeMo</h1>
+      <div> {multiplication}</div>
+      <h2>Add: {add}</h2>
+      <button onClick={() => setAdd(add + 1)}>ClickToAdd</button>
+      <h2>Minus: {minus}</h2>
+
+      <button onClick={() => setMinus(minus - 1)}>ClickToMinus</button>
+    </div>
+  )
+}
+export default App;
+```
+//  Using memo will cause React to skip rendering a component if its props have not changed.
+// The multiply function is a useMemo hook in React, which means it will automatically be called and its return value will be memoized whenever its dependencies change[add].
 
 
 
