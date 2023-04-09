@@ -155,6 +155,118 @@ function ChildB(props) {
 }
 
 ```
+### useEffect, Clean up function, Lifecycle methods, StrictMode
+* useEffect hook is part of the react hooks API. If you are familiar with react life cycles, useEffect hook is equivalent to life cycle methods componentDidMount, componentDidUpdate and componentWillUnmount combined.useEffect hook was developed to address some of the challenges posed by life cycle methods of ES6 class components.
+* A functional React component uses props and/or state to calculate the output. If the component makes calculations that don't target the output value, then these calculations are named side-effects.
+* Examples of side-effects are fetch requests, manipulating DOM directly, using timer functions like setTimeout(), and more.
+source: https://dmitripavlutin.com/react-useeffect-explanation/#4-side-effect-cleanup and https://dev.to/nibble/what-is-useeffect-hook-and-how-do-you-use-it-1p9c#effect and https://www.w3schools.com/react/react_useeffect.asp
+```
+* useEffect() hook is use to perform side effect tasks.
+useEffect() arguments
+useEffect() hook accepts 2 arguments: 
+useEffect(callback[, dependencies]);
+* callback is a function that contains the side-effect logic. callback is executed right after the DOM update.
+* dependencies is an optional array of dependencies. useEffect() executes callback only if the dependencies have changed between renderings.
+Put your side-effect logic into the callback function, then use the dependencies argument to control when you want the side-effect to run. That's the sole purpose of useEffect().
+```
+
+```
+import React, { useEffect, useState } from "react";
+
+function App() {
+  const [count, setCount] = useState(0);
+  const [data, setData] = useState("Ram")
+
+  useEffect(()=>{
+    console.log("Component Mounted")
+  }, [count]);
+
+  function updateCount() {
+    setCount(count + 1);
+
+  }
+
+  function updateData() {
+    setData("Sita");
+  }
+
+  return (
+    <div className="App">
+      <h2>Count is: {count}</h2>
+      <h2>Data is: {data}</h2>
+
+      <button onClick={() => updateCount()}>Update Counter</button>
+      <button onClick={() => updateData()}>Update Data</button>
+
+    </div>
+  )
+}
+
+export default App;
+```
+// * UseEffect
+Here are the three alternatives of useEffect:
+1. componentDidMount: This is the equivalent of useEffect with an empty dependency array ([]). It's called once when the component mounts, after the first render.
+2. componentDidUpdate: This is the equivalent of useEffect with a dependency array that contains some values. It's called after every render, but only if at least one of the dependencies has changed.
+3. componentWillUnmount: This is the cleanup function that you can return from useEffect. It's called when the component unmounts, before it's removed from the DOM. You can use this alternative to unsubscribe from events or clear some state. It is effect cleanUP.
+
+When page render first useEffect hook is also rendered in all cases:
+Case 0:  When we have no dependencies, the useEffect will run if any state is updated, initially useEffect will run first time.
+Case 1: if you want your use effect to run all the time, no dependicies is provided make it empty, this will run on every changes.
+Case 2: if you dont want your use effect to run all the time, the empty array[], this will run only once.
+Case 3: if you want to run when state or props changed, provide them inside array [state1, state2, props1, props2...]
+case 3.1: if you provide [count] it will keep on running while clicking the state change, counter keep on changing on each click
+Case 3.2: if you provide [data] it will run on first click only because when data changes to "Sita", there is no change and dont run.
+
+```
+import React, { useEffect, useState } from "react";
+
+function App() {
+  const [count, setCount] = useState(0);
+
+  function updateCount() {
+    setCount(count + 1);
+
+  }
+  useEffect(() => {
+    // Logging message to console when component mounts
+    console.log("Component Mounted");
+    // Setting a timeout to update the count state variable every 1000ms (1s)
+    let timer = setTimeout(() => {
+      updateCount();
+    }, 1000);
+    // Returning a cleanup function to clear the timeout when the component unmounts
+    return () => clearTimeout(timer)
+
+  });
+
+  return (
+    <div className="App">
+      <h2>Count is: {count}</h2>
+
+      <button onClick={() => updateCount()}>Update Counter</button>
+
+    </div>
+  )
+}
+export default App;
+```
+//  Effect Cleanup:
+Some effects require cleanup to reduce memory leaks.
+Timeouts, subscriptions, event listeners, and other effects that are no longer needed should be disposed.
+We do this by including a return function at the end of the useEffect Hook.
+Case 1: if [count]/ dependencies provided it will keep on updating on each count update
+Case 2: if [] it will keep on updating only once and stop after mounted.
+Case 3: if no dependencies it will keep on updating, but stop after it mounted.
+
+
+
+// * Strict Mode
+When running in React's Strict Mode, certain lifecycle methods and hooks are intentionally called twice during the initial rendering of a component.
+1. On First rendering pass : React does not make any changes to the DOM, but it executes the component code and captures any errors or warnings that are thrown.This is helpful for catching errors early on and for debugging any issues that may arise.
+
+2. On Second rendering Pass; React applies any necessary changes to the DOM and finalizes the rendering of the component. This helps to ensure that the component is fully up-to-date and that any changes or updates are reflected in the UI.
+It's important to note that not all lifecycle methods and hooks are executed twice in React's Strict Mode. Only certain methods, such as render(), componentDidMount(), componentDidUpdate(), and componentWillUnmount(), are affected by this behavior.
 
 
 
