@@ -1,0 +1,158 @@
+import React, { useEffect, useState } from 'react';
+import axios from "axios";
+import { v4 as uuidv4 } from "uuid";
+import './App.css';
+
+function App() {
+  const [mainData, setMainData] = useState([]);
+
+  useEffect(() => {
+    fetchStudentData();
+  }, []);
+
+  function fetchStudentData() {
+    axios.get("http://localhost:4000/products")
+      .then(response => {
+        setMainData(response.data);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  }
+
+  function addProduct(product) {
+    axios.post("http://localhost:4000/products", product)
+      .then(response => {
+        setMainData([...mainData, response.data]);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  }
+
+  function deleteProduct(id) {
+    axios.delete("http://localhost:4000/products/" + id)
+      .then(response => {
+        setMainData(mainData.filter(product => product.id !== id))
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  }
+
+  function incrementCount(id) {
+    const copyData = [...mainData];
+    const findIndex = copyData.findIndex(product => product.id === id);
+    copyData[findIndex] = {
+      ...copyData[findIndex],
+      count: copyData[findIndex].count + 1
+    };
+    axios.put("http://localhost:4000/products/" + id, copyData[findIndex])
+      .then(response => {
+        setMainData(copyData);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  }
+
+  function decrementCount(id) {
+    const copyData = [...mainData];
+    const findIndex = copyData.findIndex(product => product.id === id);
+    copyData[findIndex] = {
+      ...copyData[findIndex],
+      count: copyData[findIndex].count - 1
+    };
+    axios.put("http://localhost:4000/products/" + id, copyData[findIndex])
+      .then(response => {
+        setMainData(copyData);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  }
+
+  return (
+    <div className="App">
+      <h1>Product Form</h1>
+      <AddProductForm addProduct={addProduct} />
+      <ProductList
+        mainData={mainData}
+        deleteProduct={deleteProduct}
+        incrementCount={incrementCount}
+        decrementCount={decrementCount}
+      />
+    </div>
+  );
+}
+
+function AddProductForm({ addProduct }) {
+  const [formData, setFormData] = useState({ name: "", count: 0 })
+
+  function handleChange(event) {
+    setFormData({
+      ...formData,
+      [event.target.name]: event.target.value
+    })
+  }
+
+  function handleSubmit(event) {
+    event.preventDefault();
+    const newProduct = { ...formData, id: uuidv4() };
+    addProduct(newProduct);
+    setFormData({ name: "", count: 0 });
+  }
+
+  return (
+    <div>
+      <div>Add Product Form</div>
+      <form onSubmit={handleSubmit}>
+        <label>
+          Product Name
+          <input name="name" value={formData.name} type='text' onChange={handleChange} />
+        </label>
+        <br />
+        <label>
+          Count
+          <input name="count" type='number' value={formData.count} onChange={handleChange} />
+        </label>
+        <br />
+        <button type='submit'>Save</button>
+      </form>
+    </div>
+  );
+}
+
+function ProductList({ mainData, deleteProduct, decrementCount, incrementCount }) {
+  return (
+    <div>
+      <h2>Product List</h2>
+      <ul>
+        {mainData.map((product) => (
+          <li key={product.id}>
+            {product.name} - {product.count}
+            <button onClick={() => incrementCount(product.id)}>+</button>
+            <button onClick={() => decrementCount(product.id)}>-</button>
+            <button onClick={() => deleteProduct(product.id)}>X</button>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+export default App;
+
+// Using find
+
+function incrementCount(id) {
+  const updatedProduct = mainData.find(product => product.id === id);
+  updatedProduct.count += 1;
+  axios.put(`http://localhost:4000/products/${id}`, updatedProduct)
+    .then(response => {
+      setMainData(mainData.map(product => product.id === id ? updatedProduct : product));
+    })
+    .catch(error => {
+      console.log(error);
+    });
+}
