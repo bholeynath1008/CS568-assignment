@@ -1,24 +1,62 @@
+import React, { Component } from "react";
+import "./App.css";
+
+// Initial Data
+const initialState = [
+  { id: '101', name: "Ranjan", age: 20 },
+  { id: '102', name: "Bhote", age: 20 },
+  { id: '103', name: "Bholey", age: 19 }
+];
+
+//App Class Component (Root Component)
 class App extends Component {
   state = {
     studentData: initialState
+  }
+
+  // handleDeleteStudent function to remove a student from the studentData array
+  handleDeleteStudent = (id) => {
+    // Use setState to update the studentData array with a new array that excludes the student with the specified id
+    this.setState({ studentData: this.state.studentData.filter(student => student.id !== id) });
   }
 
   render() {
     return (
       <div className="App">
         <h1>Student App</h1>
-        <StudentList studentData={this.state.studentData}></StudentList>
+        {/* Render the StudentList component and pass the studentData array and the handleDeleteStudent function as props */}
+        <StudentList studentData={this.state.studentData} handleDeleteStudent={this.handleDeleteStudent} ></StudentList>
       </div>
     );
   }
 }
 
+//StudentList Class Component
 class StudentList extends Component {
+
+  // handleDelete function to call the handleDeleteStudent function in the parent component
+  handleDelete = (id) => {
+    this.props.handleDeleteStudent(id);
+  }
+
   render() {
-    console.log(this.props.studentData);
+    console.log(this.props);
+    // Map through the studentData array and render a list item for each student
+    const result = this.props.studentData.map(e => {
+      return <li key={e.id}>
+        student ID: {e.id}
+        name: {e.name}
+        age: {e.age}
+        {/* Add an edit button */}
+        <button>edit</button>
+        {/* Call the handleDelete function when the delete button is clicked */}
+        <button onClick={() => this.handleDelete(e.id)}>delete</button>
+      </li>
+    })
     return (
       <div>
-      This has props from the App class Component
+        <div>Student List:</div>
+        <div>{result}</div>
       </div>
     )
   }
