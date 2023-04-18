@@ -1,0 +1,27 @@
+class App extends Component {
+  state = {
+    studentData: initialState
+  }
+
+  render() {
+    return (
+      <div className="App">
+        <h1>Student App</h1>
+        <StudentList studentData={this.state.studentData}></StudentList>
+      </div>
+    );
+  }
+}
+
+class StudentList extends Component {
+  render() {
+    console.log(this.props.studentData);
+    return (
+      <div>
+      This has props from the App class Component
+      </div>
+    )
+  }
+}
+
+export default App;
