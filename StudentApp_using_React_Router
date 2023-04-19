@@ -1,0 +1,320 @@
+file: App.js
+
+import './App.css';
+import { RouterProvider, Routes } from 'react-router-dom';
+import router from './router';
+
+
+function App() {
+
+  // Rendering the RouterProvider and Routes components
+  return (
+    <RouterProvider router={router}>
+      <Routes />
+    </RouterProvider>
+  );
+}
+
+export default App;
+
+File: router.js
+import { Navigate, createBrowserRouter } from "react-router-dom";
+import StudentsDashboard from "./Components/StudentsDashboard";
+import AddStudent from "./Components/AddStudent";
+import EditStudent from "./Components/EditStudent";
+import StudentDetails from "./Components/StudentDetails";
+
+
+// Define the routes for our application
+export default createBrowserRouter([
+    {
+        path: '/',
+        // Redirect to the students page
+        element: <Navigate to='students' />,
+    },
+    {
+        path: '/students',
+        // Render the StudentsDashboard component when the URL ends with "/students"
+        element: <StudentsDashboard />,
+        children: [
+          {
+            path: 'add',
+            element: <AddStudent />
+          },
+          {
+              // Render the EditStudent component when the URL ends with "/edit"
+            path: 'edit',
+            element: <EditStudent />
+          },
+          {
+            // Render the StudentDetails component with the ID of the student in the URL parameter
+            path: ':studentId',
+            element: <StudentDetails />
+          }
+        ]
+      },
+      {
+        path: '*',
+        // Render a 404 error page for any unknown paths
+        element: <div>Oops! Page Not Found!</div>, 
+    },
+  ]);
+
+File: StudentsDashboard.js
+
+import { useState } from "react";
+import { NavLink, Outlet, useNavigate } from "react-router-dom";
+import StudentList from "./StudentList";
+
+
+// Define the initial state of students
+const initialState = [
+    { studentId: '1001', name: "Mike", age: "20" },
+    { studentId: '1002', name: "Tom", age: "21" },
+    { studentId: '1003', name: "Smith", age: "22" },
+]
+
+// Define the StudentsDashboard component
+export default function StudentsDashboard() {
+    const [students, setStudents] = useState(initialState);
+    const [studentToUpdate, setStudentToUpdate] = useState({ name: "", age: "" });
+    const navigate = useNavigate();
+
+    // Define the function for deleting a student
+    function handleDeleteStudent(id) {
+        const deleteStudent = students.filter(ele => ele.studentId !== id);
+        setStudents(deleteStudent);
+    }
+
+    // Define the function for adding a student
+    function handleAddStudent(newStudent) {
+        setStudents([newStudent].concat([...students]));
+        navigate(''); // it will be calling students route
+    }
+
+    // Define the function for handling the edit click
+    function handleEditClick(student) {
+        setStudentToUpdate({ ...student });
+        navigate('edit');
+    }
+
+    // Define the function for editing a student after click submit
+    function handleEditStudent(student) {
+        const studentIndex = students.findIndex(s => s.studentId === student.studentId);
+
+        if (studentIndex < 0) return;
+
+        setStudents([
+            ...students.slice(0, studentIndex),
+            { ...student },
+            ...students.slice(studentIndex + 1)
+        ])
+        navigate('');
+    }
+
+    
+// Define the JSX for the StudentsDashboard component
+    return (
+        <>
+            <h1>Main Page</h1>
+            <nav>
+                <li>
+                    <NavLink to='add'>Add Student</NavLink>
+                </li>
+               {/*  <li>
+                    <NavLink to='edit'>Edit Student</NavLink>
+                </li>
+                <li>
+                    <NavLink to=':studentId'>View Student</NavLink>
+                </li> */}
+            </nav>
+            <StudentList studentData={students} handleDeleteStudent={handleDeleteStudent} setStudentToUpdate={setStudentToUpdate} handleEditClick={handleEditClick} />
+            < Outlet context={{ studentToUpdate, onAddStudent: handleAddStudent, onEditStudent: handleEditStudent }} />
+        </>
+    )
+}
+
+/* 
+The Outlet component is used to render nested child routes. In this case, we are passing a context object to the child routes, which contains studentToUpdate, onAddStudent and onEditStudent functions as properties. This will allow the child routes to access and manipulate the state of the parent component.
+*/
+
+File: AddStudent.js
+
+import { useOutletContext } from "react-router-dom";
+import StudentForm from "./StudentForm";
+import { v4 as uuidv4 } from 'uuid';
+
+// This component is used to add a new student to the system.
+export default function AddStudent(props) {
+  // Retrieves the `onAddStudent` function from the parent component via `useOutletContext`.
+  const { onAddStudent } = useOutletContext();
+
+  // Defines a function to handle the submission of the `StudentForm` component.
+  function handleAddStudent(newStudent) {
+    // Adds a unique `studentId` property to the new student object using the `uuid` package.
+    onAddStudent({ ...newStudent, studentId: uuidv4().slice(0, 3) });
+  }
+
+  // Renders the `StudentForm` component wrapped in an `h2` element.
+  return (
+    <>
+      <h2>Add Student</h2>
+      <StudentForm onSubmit={handleAddStudent} />
+    </>
+  );
+}
+
+File: StudentForm.js
+
+import { useState } from "react";
+
+// Defining the StudentForm component as the default export
+export default function StudentForm({ onSubmit, initialFormData }) {
+  const [formData, setFormData] = useState(initialFormData || { name: "", age: "" });
+
+  const handleInput = (event) => {
+    const { name, value } = event.target;
+    setFormData((prevFormData) => ({ ...prevFormData, [name]: value }));
+  };
+
+  // Defining the handleSubmit function to handle form submission
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    // Calling the onSubmit prop function with the current form data
+    onSubmit(formData);
+    setFormData({ name: "", age: "" });
+  };
+
+   // Returning the form JSX
+  return (
+    <form onSubmit={handleSubmit}>
+      <div>Student information input form</div>
+      <label>
+        Student Name
+        <input
+          name="name"
+          value={formData.name}
+          type="text"
+          placeholder="name.."
+          onChange={handleInput}
+        />
+      </label>
+      <label>
+        Student Age
+        <input
+          name="age"
+          value={formData.age}
+          type="number"
+          placeholder="age.."
+          onChange={handleInput}
+        />
+      </label>
+      <button type="submit">Submit</button>
+    </form>
+  );
+}
+
+File: EditStudent.js
+
+import { useOutletContext } from "react-router-dom"
+import StudentForm from "./StudentForm";
+
+export default function EditStudent() {
+    // using the useOutletContext hook to get the studentToUpdate and onEditStudent function
+    const { studentToUpdate, onEditStudent } = useOutletContext();
+
+    function handleEditStudent(updatedStudent) {
+        // invoking the onEditStudent function with the updated student data
+        onEditStudent(updatedStudent);
+    }
+
+    return (
+        <>
+            <div>Edit Student here</div>
+            {/* passing the initial student data as props to the StudentForm component */}
+            {/* passing the handleEditStudent function as props to the StudentForm component */}
+            <StudentForm initialFormData={{ ...studentToUpdate }} onSubmit={handleEditStudent} />
+        </>
+    )
+}
+
+File: StudentList.js
+
+import React from "react";
+import Student from "./Student";
+
+
+export default function StudentList({ studentData, handleEditClick, handleDeleteStudent, setStudentToUpdate }) {
+    return (
+        <>
+            <h2>StudentList:</h2>
+           {/* Iterate through the studentData array and render each Student component */}
+            {studentData.map((s) => (
+                <Student
+                    key={s.studentId}
+                    studentId={s.studentId}
+                    name={s.name}
+                    age={s.age}
+                    // Pass handleEditClick function as a prop
+                    handleEditClick={() => handleEditClick(s)}
+                    handleDeleteStudent={handleDeleteStudent} setStudentToUpdate={setStudentToUpdate} />
+            ))}
+        </>
+    );
+}
+
+File: Student.js
+
+import React from "react";
+import { useNavigate } from "react-router-dom";
+
+export default function Student({ studentId, name, age, handleEditClick, handleDeleteStudent }) {
+    // use useNavigate hook to navigate between pages
+    const navigate = useNavigate();
+
+
+    const handleDelete = (id) => {
+        // call handleDeleteStudent function with student ID
+        handleDeleteStudent(id)
+    };
+
+    function handleView() {
+        // navigate to the student's details page with student ID, name and age
+        navigate(studentId, { state: { studentId, name, age } });
+    }
+
+    return (
+        <div>
+            <p>
+                Id: {studentId}, Name: {name}, Age: {age}
+                <button onClick={handleEditClick}>Edit</button>&#160;
+                <button onClick={() => handleDelete(studentId)}>Delete</button>&#160;
+                <button onClick={handleView}>View</button>
+
+            </p>
+        </div>
+    );
+
+}
+
+File: StudentDetails.js
+
+import { useLocation } from "react-router-dom"
+
+export default function StudentDetails() {
+    // get the current location object using useLocation hook from react-router-dom
+    const location = useLocation();
+
+    return(
+        <>
+        <h1>I will give students details</h1>
+        {/* iterate over the state object passed from the previous component */}
+        {Object.entries(location.state).map(([key, value]) => (
+            <div key={key}>{key}: {value}</div>
+        ))}
+        </>
+    )
+}
+
+
+
