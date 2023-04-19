@@ -1,0 +1,212 @@
+File: App.js
+
+import React, { Component } from "react";
+import "./App.css";
+import StudentList from "./components/StudentList";
+import StudentAddForm from "./components/StudentAddForm";
+
+// Initial Data
+const initialState = [
+  { id: '101', name: "Ranjan", age: 20 },
+  { id: '102', name: "Bhote", age: 20 },
+  { id: '103', name: "Bholey", age: 19 }
+];
+
+//App Class Component (Root Component)
+class App extends Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      studentData: initialState,
+      mode: "add",
+      studentToUpdate: { name: '', age: "" }
+    }
+    this.handleAddStudent = this.handleAddStudent.bind(this);
+    this.handleDeleteStudent = this.handleDeleteStudent.bind(this);
+    this.handleEditStudent = this.handleEditStudent.bind(this);
+    this.handleEditClick = this.handleEditClick.bind(this);
+
+  }
+
+  // handleDeleteStudent function 
+  handleDeleteStudent(id) {
+    // Use setState to update the studentData array with a new array that excludes the student with the specified id
+    this.setState({ studentData: this.state.studentData.filter(student => student.id !== id) });
+  }
+
+  //handle Add Student
+  handleAddStudent(newStudent) {
+    this.setState({ studentData: [...this.state.studentData].concat(newStudent) });
+  }
+
+  handleEditStudent(student) {
+  const findIndexToUpdate = this.state.studentData.findIndex(s => s.id === student.id);
+  const updatedStudentData = [...this.state.studentData];
+  updatedStudentData[findIndexToUpdate] = student;
+  this.setState({ studentData: updatedStudentData, mode: "add" });
+}
+
+
+  // handle edit Student
+  handleEditClick (student){
+    console.log("e1", this.state.studentToUpdate);
+    this.setState({ studentToUpdate: student, mode: "edit" })
+    console.log("e2", this.state.studentToUpdate);
+    
+
+  }
+
+  render() {
+    return (
+      <div className="App">
+        <h1>Student App</h1>
+        <StudentList studentData={this.state.studentData} handleDeleteStudent={this.handleDeleteStudent} handleEditClick={this.handleEditClick} mode={this.state.mode} studentToUpdate={this.state.studentToUpdate} />
+        <StudentAddForm handleAddStudent={this.handleAddStudent} handleEditStudent={this.handleEditStudent} mode={this.state.mode} studentToUpdate={this.state.studentToUpdate} />
+      </div>
+    );
+  }
+}
+
+export default App;
+
+File: StudentList.js
+
+import React, { Component } from "react";
+
+class StudentList extends Component {
+
+  // handle delete
+  handleDelete = (id) => {
+    this.props.handleDeleteStudent(id);
+  }
+
+  // handle edit
+  handleEdit = (e) => {
+    this.props.handleEditClick(e);
+  }
+  
+
+  render() {
+    const { studentData } = this.props;
+
+    const result = studentData.map(e => {
+      return (
+        <li key={e.id}>
+          student ID : {e.id}
+          name : {e.name}
+          age : {e.age}
+          <button onClick={() => this.handleEdit(e)}>edit</button>
+          <button onClick={() => this.handleDelete(e.id)}>delete</button>
+        </li>
+      )
+    })
+    return (
+      <div>
+        <div>Student List:</div>
+        <div>{result}</div>
+      </div>
+    )
+  }
+}
+
+export default StudentList;
+
+File: StudentAddForm.js
+
+import React, { Component } from "react";
+import { v4 as uuidv4 } from 'uuid';
+
+class StudentAddForm extends Component {
+    constructor(props) {
+        super(props)
+        this.state = {
+            formData: {
+                name: "",
+                age: ""
+            }
+        };
+    }
+
+    componentDidMount() {
+        // If the mode is "edit", set the initial state of the form with the data of the student to update
+        if (this.props.mode === "edit") {
+            this.setState({ formData: this.props.studentToUpdate });
+        }
+    }
+
+    componentDidUpdate(prevProps) {
+        // If the mode changes from "add" to "edit", update the state of the form with the data of the student to update
+        if (prevProps.mode === "add" && this.props.mode === "edit") {
+            this.setState({ formData: this.props.studentToUpdate });
+        }
+    }
+
+    handleInput = (e) => {
+        const { name, value } = e.target;
+        this.setState((prevState) => ({
+            formData: {
+                ...prevState.formData,
+                [name]: value
+            }
+        }));
+    };
+
+    handleSubmit = (e) => {
+        e.preventDefault();
+        const { name, age } = this.state.formData;
+        if (!name || !age) {
+            alert("Please fill in all fields");
+            return;
+        }
+        const newStudent = {
+            id: uuidv4().slice(0, 3),
+            ...this.state.formData
+        };
+        if (this.props.mode === "add") {
+            this.props.handleAddStudent({
+                id: uuidv4().slice(0, 3),
+                ...this.state.formData
+            });
+        } else {
+            this.props.handleEditStudent(newStudent);
+        }
+        this.setState({ formData: { name: "", age: "" } });
+    };
+
+    render() {
+        const { mode } = this.props;
+        const { name, age } = this.state.formData;
+        return (
+            <div>
+                <h2>{mode === "add" ? "Add Student Form" : "Edit Student"}</h2>
+                <form onSubmit={this.handleSubmit}>
+                    <label>
+                        Student Name
+                        <input
+                            value={name}
+                            type="text"
+                            name="name"
+                            placeholder="name.."
+                            onChange={this.handleInput}
+                        />
+                    </label>
+                    <label>
+                        Student Age
+                        <input
+                            value={age}
+                            type="number"
+                            name="age"
+                            placeholder="age.."
+                            onChange={this.handleInput}
+                        />
+                    </label>
+                    <button type="submit">{mode === "add" ? "Add" : "Save"}</button>
+                </form>
+            </div>
+        );
+    }
+}
+
+export default StudentAddForm;
+
+
