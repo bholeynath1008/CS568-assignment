@@ -567,3 +567,66 @@ export default function SearchBar() {
 }
 
 ```
+
+### useContext
+To share data between multiple child components using useContext, you can follow these steps:
+
+Create a context object using the createContext() function.
+
+In the parent component, define the state variables that you want to share between the child components.
+
+Wrap the child components that need to access the state variables inside the Context.Provider component. Set the value of the Provider to an object that contains the state variables and any functions that update the state.
+
+In the child components that need to access the state variables, use the useContext() hook to get the value of the context object.
+
+Here's an example implementation:
+
+```
+import React, { createContext, useContext, useState } from 'react';
+
+// Step 1: create a context object
+const MyContext = createContext();
+
+function Parent() {
+  // Step 2: define the state variables
+  const [name, setName] = useState('John');
+  const [age, setAge] = useState(30);
+
+  return (
+    // Step 3: wrap child components in Context.Provider
+    <MyContext.Provider value={{ name, setName, age, setAge }}>
+      <Child1 />
+      <Child2 />
+      <Child3 />
+      <Child4 />
+    </MyContext.Provider>
+  );
+}
+
+function Child1() {
+  // Step 4: access context values using useContext
+  const { name } = useContext(MyContext);
+  return <div>Child 1: {name}</div>;
+}
+
+function Child2() {
+  return <div>Child 2</div>;
+}
+
+function Child3() {
+  // Step 4: access context values using useContext
+  const { name, age } = useContext(MyContext);
+  return (
+    <div>
+      Child 3: {name} is {age} years old
+    </div>
+  );
+}
+
+function Child4() {
+  // Step 4: access context values using useContext
+  const { age } = useContext(MyContext);
+  return <div>Child 4: age is {age}</div>;
+}
+
+```
