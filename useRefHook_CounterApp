@@ -1,0 +1,35 @@
+// It can be used to access a DOM element directly.
+// The useRef hook itself does not trigger a re-render. 
+// When you update the value of a ref created with useRef, React does not automatically re-render the component. 
+// This is because the purpose of useRef is primarily for storing mutable values or references between renders without triggering a re-render.
+
+import { useRef } from "react";
+import { useState } from "react";
+
+function App() {
+  const [timer, setTimer] = useState(0);
+  const intervalRef = useRef(0);
+
+  // function timer
+  const handleStart = () => {
+  intervalRef.current = setInterval(() => {
+      setTimer(timer => timer + 1);
+    }, 1000);
+  }
+
+  const handleStop = () => {
+    clearInterval(intervalRef.current);
+    setTimer(0);
+  }
+
+  return (
+    <div className="App">
+      <h2>timer: {timer}</h2>
+      <button onClick={handleStart}>START</button> <br />
+      <button onClick={handleStop}>STOP</button>
+    </div>
+  );
+}
+
+export default App;
+
