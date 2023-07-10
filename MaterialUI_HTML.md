@@ -14,6 +14,12 @@ Material-UI's <Typography> offers more control over styling and typography optio
 Both are used for creating a header section.
 Material-UI's <AppBar> provides a more comprehensive component for creating application headers, including navigation and additional customization options.
 
+<Tabs>
+   <Tab label="Resume" component={NavLink} to="resume" />
+</Tabs>
+`<Box>` (Material-UI) vs. `<div>` (HTML):
 `<Card>` (Material-UI) vs. `<div>` (HTML):
 Both are used for creating containers or sections.
 Material-UI's <Card> component offers pre-styled containers with added features like shadows, borders, and layout options.
+
+
