@@ -42,6 +42,17 @@ const ChildComponent = () => {
 export default App;
 
 ```
+```
+{} is used to create a JavaScript object literal.
+{{}} is used in JSX to embed a JavaScript object as a prop or any other JavaScript expression that needs to be evaluated.
+```
+### Case 2:
+```
+* 1. Create Context: **const AppContext = createContext("")**;
+* 2. Provide Context: **<AppContext.Provider value={{mainData, setMainData}}>**
+* 3. Use Context: ** const data = useContext(AppContext);**
+
+```
 -------*---------
 The context is created as a standalone context named `MyContext`, and it is used directly within the `ParentComponent` and `ChildComponent`. 
 The `useReducer hook` is used within the `ParentComponent` to manage state, and the `context value` is provided through the `MyContext.Provider component`.
