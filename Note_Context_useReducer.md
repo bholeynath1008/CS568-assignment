@@ -40,7 +40,8 @@ const ChildComponent = () => {
 ---
 ## Another way to use Context 
 * By directly Provide context with value using `MyContextProvider` Component.
-`File: AppContext.js`
+  
+**Step 1 :**`File: AppContext.js`
 
  // Here, the 'children' prop represents the content passed between the `<MyContextProvider>`and `</MyContextProvider>` tags.
  // You can access and render the children inside the component.
@@ -68,7 +69,7 @@ export {MyContextProvider, AppContext};
 
 ```
 
-`File: App.js`
+**Step 2 :** `File: App.js`
 
 * context in App.js or index.js
 
