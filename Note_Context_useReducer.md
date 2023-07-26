@@ -117,7 +117,10 @@ src/
 ### Step 1 - App.js:
 This is the top-level component where you're rendering the `MyContextProvider` and the TodoList component as its child. This allows the `TodoList` component and its descendants to access the shared `state` and `dispatch` function provided by the `context`.
 
+
 ```
+import MYContextProvider from './MyContext';
+
 function App() {
   return (
     <div className="App">
@@ -172,13 +175,13 @@ const MyContextProvider = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
 
   return (
-    <MyContext.Provider value={{ state, dispatch }}>
+    <MyContext.Provider value={{ state, dispatch }}>   // `MyContext` is used here to provide context
       {children}
     </MyContext.Provider>
   );
 };
 
-export { MyContext, MyContextProvider };
+export MyContextProvider; // No need to export MyContext, MyContextProvider will wrap @ App.js
 
 ```
 * Complete Implementation of **useReducer** and **useContext** hook
