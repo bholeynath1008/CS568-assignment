@@ -1,0 +1,308 @@
+## Hook
+
+A `hook`` is a special function that allows functional components to access and use React features. Hooks were introduced in React version 16.8.(2019 feb). Hooks provide a way to use state and other React features, such as context, lifecycle methods, and side-effects, without needing to write a class component.
+You must import Hooks from react.
+
+### Hook Rules
+
+There are 3 rules for hooks:
+
+- Hooks can only be called inside React function components.
+- Hooks can only be called at the top level of a component.
+- Hooks cannot be conditional
+
+### 1. useState hooks
+
+- useState accepts an initial state and returns two values: `The current state`. `A function that updates the state.`
+- The first element (index 0) is the current state variable (color), and the second element (index 1) is the state update function (setColor).
+
+```
+const [color, setColor] = useState ('red);
+```
+
+or
+
+```
+const colorState = React.useState('red');
+const color = colorState[0];
+const setColor = colorState[1];
+```
+
+### 2. useEffect Hooks
+
+The `useEffect` Hook allows you to perform side effects in your components. Some examples of side effects are: fetching data, directly updating the DOM, and timers.
+`useEffect` accepts two arguments. The second argument is optional.
+`useEffect`(<function>, <dependency>).
+
+#### Questions:
+
+- How many times it will re render? Another question, make it render when count value changes.
+
+```
+import './App.css';
+import { useEffect, useState } from 'react'
+
+function App() {
+  const [count, setCount] = useState(0);
+  useEffect(() => {
+    setTimeout(() => {
+      setCount((count) => count + 1);
+    }, 1000);
+    console.log('render')
+  }, []); // <- add empty brackets here
+
+  return <h1>I've rendered {count} times!</h1>;
+}
+
+export default App;
+```
+
+Ans: 2, First, When component mounts. The setTimeout function inside the useEffect closure will schedule a single update after 1000 milliseconds (1 second). This will trigger a re-render, but since the useEffect hook has no dependencies, it will not run again after the re-render.
+
+#### Effect Cleanup
+
+- Some effects require cleanup to reduce memory leaks.
+
+- Timeouts, subscriptions, event listeners, and other effects that are no longer needed should be disposed.
+
+- We do this by including a return function at the end of the useEffect Hook.
+
+```
+// The cleanup function is returned from useEffect
+// This cleanup function will be executed when the component is unmounted or when the dependencies change.
+const [count, setCount] = useState(0);
+
+  useEffect(() => {
+    let timer = setTimeout(() => {
+    setCount((count) => count + 1);
+  }, 1000);
+
+  return () => clearTimeout(timer)
+  }, []);
+
+  return <h1>I've rendered {count} times!</h1>;
+```
+
+If the component is toggled and it gets unmounted, the useEffect cleanup function will be triggered. This behavior occurs because when a component is unmounted (removed from the DOM), React automatically calls the cleanup function associated with any active useEffect hooks within that component.
+
+### React Context
+
+- `React Context` is a way to manage state globally and can be used together with the `useState` Hook to share state between deeply nested components more easily than with useState alone.
+- State should be held by the highest parent component in the stack that requires access to the state.
+  To illustrate, we have many nested components. The component at the top and bottom of the stack need access to the state. To do this without Context, we will need to pass the state as "props" through each nested component. This is called "prop drilling".
+
+#### Steps:
+
+- 1. `Create the Context`:The createContext() function takes an optional initial value as an argument, which will be used as the default value for the context.
+- 2. `Context Provider/consume the context` <UserContext.Provider value={user}>:
+     The Context Provider to wrap the tree of components that need the state Context. Wrap child components in the Context Provider and supply the state value.
+- 3. `Use the Context (useContext Hook approach)`:
+     In order to use the Context in a child component, we need to access it using the useContext Hook.
+
+### useRef:
+
+The `useRef` Hook allows you to persist values between renders. It can be used to store a mutable value that does not cause a re-render when updated. It can be used to access a `DOM element` directly.
+This is especially useful in scenarios like:
+
+- `Storing references to DOM elements`: You can use useRef to obtain direct access to DOM elements without causing the component to re-render when you interact with or modify the DOM.
+
+- `Storing previous values`: You can keep track of the previous state or prop values to perform comparisons without causing unnecessary re-renders.
+
+- `Caching expensive calculations`: If you have computations that don't depend on props or state and would otherwise be performed on every render, you can use useRef to store the result and avoid recomputation.
+
+- `Managing mutable state without re-renders`: When you need a value that persists across renders and updates but shouldn't trigger re-renders, useRef is an excellent choice.
+
+`useRef()` only returns one item. It returns an Object called `current`. When we initialize `useRef` we set the initial value: `useRef(0)`.
+
+`It's like doing this: const count = {current: 0}. We can access the count by using count.current.`
+
+`Example : 1`: Counting the no of re renders
+
+```
+// const count = {current: 0}.
+We can access the count by using 'count.current'.
+
+import './App.css';
+import { useEffect, useRef, useState } from 'react'
+
+function App() {
+  const [inputValue, setInputValue] = useState('');
+  const count = useRef(0);
+
+  useEffect(()=> {
+    count.current = count.current +1;
+  })
+
+  return <div>
+    <input value={inputValue} onChange={(e)=> setInputValue(e.target.value)}></input>
+    <h1>Render count: {count.current}</h1>
+  </div>
+}
+
+export default App;
+The `useRef hook` is used to create a `mutable` `ref object`, and the `.current` property of the ref holds its current value. Unlike state, updating the count ref does not trigger a re-render of the component.
+```
+
+`Example : 2`: Accessing the DOM Elements: `focus` when components mount.
+
+```
+// const inputRef = useRef(null); is like const inputRef = {current: null};
+// focus the input element using the inputRef.current property, and set that property .focus()
+
+import './App.css';
+import { useEffect, useRef, useState } from 'react'
+
+function App() {
+  const inputRef = useRef(null);
+  useEffect(() => {
+    // This will focus the input element when the component mounts.
+    if (inputRef.current) {
+      inputRef.current.focus();
+    }
+  })
+
+  return (
+    <>
+      <input ref={inputRef} />
+    </>
+  )
+}
+
+export default App;
+
+```
+
+`Example: 3`: `Tracking State Changes`
+
+- The `useRef` Hook can also be used to keep track of previous state values.
+- This is because we are able to persist `useRef` values between renders.
+  This time we use a combination of `useState`, `useEffect`, and `useRef` to keep track of the `previous state`.
+
+```
+import './App.css';
+import React, { useEffect, useRef, useState } from 'react';
+
+function App() {
+  const [inputValue, setInputValue] = useState('');
+  const previousInputValue = useRef('');
+
+  useEffect(() => {
+    previousInputValue.current = inputValue;
+  }, [inputValue]);
+
+  return (
+    <>
+      <input value={inputValue} onChange={(e) => setInputValue(e.target.value)} />
+      <h2>Current value: {inputValue}</h2>
+      <h2>Previous value: {previousInputValue.current}</h2>
+    </>
+  );
+}
+
+export default App;
+
+```
+### React 'useMemo' Hook
+The `useMemo` Hook can be used to keep expensive, resource intensive functions from needlessly running.
+The `useMemo` is a hook used in the functional component of react that returns a memoized value. 
+The `useMemo` Hook only runs when one of its dependencies update.
+This can improve performance.
+The `useMemo` hook is used to improve performance in React applications by memoizing the result of a computation and preventing unnecessary re-computations and re-renders when the dependencies (state and props) haven't changed.
+The `useMemo` and `useCallback` Hooks are similar. The main difference is that `useMemo` returns a memoized value and `useCallback` returns a memoized function.
+
+
+
+
+
+
+`useMemo` vs `React.memo`
+`React.memo:` It is a higher-order component (HOC) provided by React. It is used to memoize the result of a component and prevent unnecessary re-renders when the component receives the same props. When a component is wrapped with React.memo, it will re-render only if the props have changed.
+```
+import React from 'react';
+
+const MyComponent = React.memo((props) => {
+  // Your component logic here
+});
+
+export default MyComponent;
+
+```
+### Custom Hooks in React
+* A custom Hook in a javascript function whose name starts with 'use'. Filename convention: `useCounter.js``
+* We can use other hooks in custom hooks as well.
+
+Why to use Custom Hook?
+* To remove the duplicated logic in components and we can extract that logic to custom hook.
+
+Steps: 1. Creating Custom Hooks
+```
+// Custom Hook: useCounter
+
+import React, { useState } from 'react';
+const useCounter = () => {
+  const [count, setCount] = useState(0);
+
+  function Increment() {
+    setCount(count + 1);
+  }
+
+  function Decrement() {
+    setCount(count - 1);
+  }
+
+  // Returning an array with three elements: 'count', 'Increment' function, and 'Decrement' function
+  // This allows the components using this custom hook to access the state and functions directly.
+  return [count, Increment, Decrement];
+}
+
+// Exporting the custom hook so that other components can use it
+export default useCounter;
+
+```
+Step 2: Using of custom hook.
+```
+import React from 'react';
+import useCounter from './useCounter'; // Import the custom hook
+
+const MyComponent = () => {
+  // Using the custom hook in the component
+  const [count, Increment, Decrement] = useCounter();
+
+  return (
+    <div>
+      <h1>Counter: {count}</h1>
+      <button onClick={Increment}>Increment</button>
+      <button onClick={Decrement}>Decrement</button>
+    </div>
+  );
+}
+
+export default MyComponent;
+
+```
+Some common use cases of custom hooks include:
+
+* `Code Reusability:` Custom hooks enable you to encapsulate complex logic and make it reusable across multiple components.
+* `Data Fetching:` Custom hooks can encapsulate data-fetching logic using tools like useEffect and fetch. This allows you to centralize data-fetching logic and keep your components clean and focused on rendering.
+* `Event Handlers:` Custom hooks can manage event handlers, making it easy to share event-related logic (e.g., form handling, input validation) across different components.
+* `Form Handling and Validation:` Custom hooks can manage form state, validation, and submission logic, simplifying form implementation across the application.
+
+
+
+
+
+
+
+
+
+
+
+
+
+`useMemo`: It is a hook provided by React. It is used to memoize the result of a function and can be used inside functional components. The `useMemo` hook takes a function and an array of dependencies, and it returns a memoized version of the function result. It is typically used for `expensive computations` or calculations that should only be recomputed when the dependencies change.
+
+`const calculation = useMemo(() => expensiveCalculation(count), [count])`;
+
+
+
+`Memoization` is a concept used in general when we don’t need to recompute the function with a given argument for the next time as it returns the cached result. A memoized function remembers the results of output for a given set of inputs. 
