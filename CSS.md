@@ -1,3 +1,5 @@
+ **Note :** The parent element to **position: relative** is a common technique used in CSS layout to control the `positioning of child elements` within a specific context
+
 1. **static** : Normal position as per dom render. Default positioning; elements follow `normal document flow`. Properties like `top`, `bottom`, `left`, and `right` have no effect.
 
 2. **relative** : relative to its normal position, it will be move from its normal positon when top:10px. If you want to move from original (old) positon then use "relative". "aafno original location jaha xa teha bata moove garaune". Positioned relative to its normal position; can be moved using `top`, `bottom`, `left`, or `right`.
