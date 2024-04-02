@@ -29,4 +29,45 @@
 4. **Mobile-First Approach:** Start designing for mobile devices and then progressively enhance for larger screens.
 5. **Flexible Images and Media:** Ensure images and media elements adjust fluidly to different screen sizes using CSS or HTML attributes.
 
+**Examples:**
+
+```
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Responsive Example</title>
+    <style>
+        .container {
+            width: 100%;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .box {
+            width: 200px;
+            height: 200px;
+            background-color: #f0f0f0;
+            margin: 10px;
+        }
+        @media only screen and (max-width: 600px) {
+            .box {
+                width: 150px;
+                height: 150px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="box"></div>
+        <div class="box"></div>
+        <div class="box"></div>
+    </div>
+</body>
+</html>
+```
+
+
 By focusing on these key aspects, you can create responsive websites that adapt well to various devices and screen sizes.
