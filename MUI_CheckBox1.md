@@ -82,6 +82,7 @@ Output:
 Selected Hobbies: { hobbies: ["play", "sing"] }
 Selected Sports: { sports: ["cricket", "badminton"] }
 ```
+```
 import React, { useState } from "react";
 import { FormControlLabel, Checkbox } from "@mui/material";
 
