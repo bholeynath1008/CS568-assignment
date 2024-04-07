@@ -104,8 +104,38 @@ These properties, shortcuts, and terminologies enhance the efficiency and precis
 | **Spacing**             | `gap`                        | Define spacing between child elements. <br> Example: `gap: 10px;` |
 | **Direction**           | `flex-direction`             | Define the flow of child elements. <br> Example: `flex-direction: row;` |
 | **Distribution**        | `justify-content`            | Specify space distribution between child elements. <br> Example: `justify-content: space-between;` |
+| **Wrap**                | `flex-wrap`                  | Allow child elements to wrap to the next line. <br> Example: `flex-wrap: wrap;` |
 | **Nesting**             | Nested Flex Containers       | Nest auto layout frames for complex layouts. <br> Example: `.parent { display: flex; } .child { display: flex; }` |
 
+### Scroll and Overflow:
+
+| Figma Property          | CSS Equivalent                | Viewport Constraints & Examples                                   |
+|-------------------------|-------------------------------|-------------------------------------------------------------------|
+| **Scroll**              | `overflow: auto;`            | Enable scrolling for overflowing content. <br> Example: `overflow: auto;` |
+
+### Color Management:
+
+| Figma Property          | CSS Equivalent                | Viewport Constraints & Examples                                   |
+|-------------------------|-------------------------------|-------------------------------------------------------------------|
+| **Color**               | `color`                       | Set text color or foreground color. <br> Example: `color: #333;` |
+| **Background Color**    | `background-color`            | Set background color of an element. <br> Example: `background-color: #fff;` |
+
+### Typography:
+
+| Figma Property          | CSS Equivalent                | Viewport Constraints & Examples                                   |
+|-------------------------|-------------------------------|-------------------------------------------------------------------|
+| **Font Family**         | `font-family`                 | Specify the font family for text. <br> Example: `font-family: Arial, sans-serif;` |
+| **Font Size**           | `font-size`                   | Set the size of the font. <br> Example: `font-size: 16px;` |
+| **Font Weight**         | `font-weight`                 | Set the weight (boldness) of the font. <br> Example: `font-weight: bold;` |
+| **Text Decoration**     | `text-decoration`             | Add decoration to text (e.g., underline). <br> Example: `text-decoration: underline;` |
+| **Text Transform**      | `text-transform`              | Transform text to uppercase, lowercase, or capitalize. <br> Example: `text-transform: uppercase;` |
+
+### Vector Editing:
+
+| Figma Property          | CSS Equivalent                | Viewport Constraints & Examples                                   |
+|-------------------------|-------------------------------|-------------------------------------------------------------------|
+| **Vector Fill**         | `fill`                        | Set the fill color of vector graphics. <br> Example: `fill: #ff0000;` |
+| **Vector Stroke**
 
 **Responsive Design Properties**
 | Figma Property        | CSS Equivalent                        | Viewport Constraints                                                                                   |
