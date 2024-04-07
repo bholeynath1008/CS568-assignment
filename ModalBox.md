@@ -161,11 +161,20 @@ Modal.jsx
 import React, { useState, useEffect, useRef } from "react";
 import "./Modal.css";
 
+/**
+ * Modal component displaying a modal dialog on button click.
+ */
 export default function Modal() {
+  // State to track whether the modal is open or closed
   const [modalOpen, setModalOpen] = useState(false);
+  
+  // Ref for the modal element
   const modalRef = useRef(null);
+  
+  // Ref for the button that opens the modal
   const btnRef = useRef(null);
 
+  // Effect to handle keydown event for closing the modal on pressing Escape key
   useEffect(() => {
     const handleKeyDown = (event) => {
       if (event.key === "Escape") {
@@ -175,27 +184,33 @@ export default function Modal() {
 
     document.addEventListener("keydown", handleKeyDown);
 
+    // Cleanup function to remove event listener when component unmounts
     return () => {
       document.removeEventListener("keydown", handleKeyDown);
     };
   }, []);
 
+  // Function to open the modal and move focus to it after animation
   const openModal = () => {
     setModalOpen(true);
     setTimeout(() => modalRef.current.focus(), 100); // Move focus to modal after animation
   };
 
+  // Function to close the modal and return focus to the button
   const closeModal = () => {
     setModalOpen(false);
     btnRef.current.focus(); // Return focus to the button
   };
 
+  // JSX to render the modal component
   return (
     <>
+      {/* Button to open the modal */}
       <button ref={btnRef} onClick={openModal} className="btn-modal">
         Open
       </button>
 
+      {/* Modal dialog */}
       {modalOpen && (
         <div
           ref={modalRef}
@@ -205,7 +220,10 @@ export default function Modal() {
           aria-labelledby="modal-title"
           tabIndex="-1"
         >
+          {/* Overlay to close the modal when clicked */}
           <div className="overlay" onClick={closeModal}></div>
+          
+          {/* Modal content */}
           <div className="modal-content" role="document">
             <h2 id="modal-title">Hello Modal</h2>
             <p>
@@ -214,6 +232,8 @@ export default function Modal() {
               imperdiet enim nec purus blandit, vel sollicitudin purus
               vestibulum. Donec nec velit vel tortor feugiat ullamcorper.
             </p>
+            
+            {/* Button to close the modal */}
             <button
               className="close-modal"
               onClick={closeModal}
@@ -224,6 +244,8 @@ export default function Modal() {
           </div>
         </div>
       )}
+      
+      {/* Additional content outside the modal */}
       <p>
         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus auctor
         nisi eu nulla vehicula, vel elementum nunc posuere. Sed imperdiet enim
