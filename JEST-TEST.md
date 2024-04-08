@@ -4,6 +4,12 @@ FreeCodeCamp: [How to Write Unit Tests in React](https://www.freecodecamp.org/ne
 
 In testing frameworks like Jest or Mocha, The **describe** function takes two arguments: a description (usually a string) of the group of tests, and a function containing the individual test cases or nested describe blocks. 
 
+Commonly used Jest functions like test() or it() typically take two arguments:
+
+1. A string describing the test case or suite.
+2. A function containing the test assertions.
+3. SetTimeout fn
+
 Example:
 ```
 describe('Math operations', () => {
