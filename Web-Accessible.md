@@ -29,6 +29,14 @@ function SemanticHTMLExample() {
 ```
 
 ### 2. ARIA Roles & Attributes: Using ARIA roles and attributes in React
+
+**ARIA Roles:**
+* button
+* navigation
+* dialog
+* alert
+* menu
+* region
 ```
 function ARIAExample() {
   return (
@@ -39,13 +47,67 @@ function ARIAExample() {
 }
 ```
 
+```
+<!-- Use Case: Enhancing button functionality -->
+<div role="button" tabindex="0" aria-label="Close"></div>
+
+<!-- Use Case: Creating a navigation menu -->
+<nav role="navigation">
+  <ul>
+    <li><a href="#home">Home</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- Use Case: Representing a dialog or window -->
+<div role="dialog" aria-labelledby="dialog-title">
+  <h2 id="dialog-title">Dialog Title</h2>
+  <p>Dialog content goes here.</p>
+</div>
+
+<!-- Use Case: Displaying an important alert -->
+<div role="alert">Error message goes here.</div>
+
+<!-- Use Case: Creating a dropdown menu -->
+<div role="menu">
+  <button>Item 1</button>
+  <button>Item 2</button>
+  <button>Item 3</button>
+</div>
+
+<!-- Use Case: Providing a label for an element -->
+<button aria-label="Close dialog">X</button>
+
+<!-- Use Case: Associating an element with its label -->
+<div id="section-title">Section Title</div>
+<div role="region" aria-labelledby="section-title">
+  <!-- Content goes here -->
+</div>
+
+```
+
 ###  3. Keyboard Navigation: Handling keyboard navigation in React
+**Keyboard Events:**
+* onKeyDown
+* onKeyPress
+* onKeyUp
+  
+**Possible Use Cases:**
+* Enabling users to interact with custom UI components using keyboard shortcuts.
+* Implementing keyboard navigation within a carousel or slider.
+```
+<!-- Use Case: Handling keyboard events for an element -->
+<div tabIndex="0" onKeyDown={handleKeyDown}></div>
+
+```
+**Enter** Keyboard Event
 ```
 function KeyboardNavigationExample() {
  Function to handle Enter key press
   function handleKeyDown(event) {
     if (event.key === 'Enter') {
-      ###  Handle Enter key press
+     // Handle Enter key press
     }
   }
 
@@ -56,8 +118,48 @@ function KeyboardNavigationExample() {
   );
 }
 ```
+**ESC** Keypress event
+```
+// Use Case: Handling "Esc" keypress event to close a modal dialog
+document.addEventListener('keydown', function(event) {
+  if (event.key === 'Escape') {
+    closeModal(); // Function to close the modal dialog
+  }
+});
+
+```
 
 ###  4. Focus Management: Managing focus in React
+
+<span style="color:green">_See Example and UseCases Below_</span>
+
+**Possible Use Cases:**
+* Ensuring focus remains within a dialog box until it's closed, enhancing user experience for screen reader users.
+* Managing focus within a single-page application to maintain accessibility and usability.
+
+### Managing Focus in React Functional Components
+
+#### 1. Using Refs
+Utilize the `ref` attribute to create references to DOM elements and programmatically manage focus.
+
+#### 2. Using tabIndex Attribute
+Control the order of focus during keyboard navigation using the `tabIndex` attribute.
+
+#### 3. Managing Focus in useEffect Hook
+Handle focus management within `useEffect` hook.
+
+#### 4. Managing Focus in Lifecycle Methods
+Handle focus management within lifecycle methods like `componentDidMount` and `componentDidUpdate`.
+
+#### 5. Using Focus Management Libraries
+Employ specialized React libraries such as `react-focus-lock` to streamline focus management tasks.
+
+
+```
+<!-- Use Case: Managing focus within a modal dialog -->
+<div tabIndex="0" aria-modal="true"></div>
+```
+
 ```
 function FocusManagementExample() {
   return (
@@ -69,6 +171,15 @@ function FocusManagementExample() {
 ```
 
 ###  5. Color Contrast: Styling with proper color contrast in React
+**Possible Use Cases:**
+* Making text content more readable for users with visual impairments.
+* Meeting accessibility standards and guidelines such as WCAG (Web Content Accessibility Guidelines).
+```
+/* Use Case: Ensuring sufficient color contrast */
+color: #333;
+background-color: #fff;
+
+```
 ```
 function ColorContrastExample() {
   return (
@@ -80,6 +191,15 @@ function ColorContrastExample() {
 ```
 
 ###  6. Accessible Forms: Creating accessible forms in React
+**Possible Use Cases:**
+* Making form fields understandable and navigable for screen reader users.
+* Improving usability for users with motor impairments who may rely on keyboard navigation.
+```
+<!-- Use Case: Creating a form with labels -->
+<label for="username">Username:</label>
+<input type="text" id="username">
+
+```
 ```
 function AccessibleFormsExample() {
   return (
@@ -137,6 +257,80 @@ function TestingExample() {
       <SomeAccessibleComponent />
       <TestingComponent />
     </div>
+  );
+}
+```
+-----------------------------------------
+
+##  Managing Focus in Functional Components
+
+1. **Using Refs:**
+
+```
+   import React, { useRef } from 'react';
+
+   function MyComponent() {
+     const inputRef = useRef(null);
+
+     const handleClick = () => {
+       inputRef.current.focus();
+     };
+     return (
+       <div>
+         <input ref={inputRef} type="text" />
+         <button onClick={handleClick}>Focus Input</button>
+       </div>
+     );
+   }
+```
+
+2. **Using tabIndex Attribute:**
+
+```
+import React from 'react';
+
+function MyComponent() {
+  return (
+    <div>
+      <button tabIndex={-1}>Not Focusable</button>
+      <button>Focusable</button>
+    </div>
+  );
+}
+```
+
+3. **Managing Focus in Lifecycle Methods:**
+
+```
+import React, { useEffect, useRef } from 'react';
+
+function MyComponent() {
+  const inputRef = useRef(null);
+
+  useEffect(() => {
+    inputRef.current.focus();
+  }, []);
+
+  return <input ref={inputRef} />;
+}
+```
+
+4. **Using Focus Management Libraries:**
+
+```
+import React from 'react';
+import FocusLock from 'react-focus-lock';
+
+function Modal({ isOpen, onClose }) {
+  return (
+    <FocusLock disabled={!isOpen}>
+      {isOpen && (
+        <div className="modal">
+          <button onClick={onClose}>Close</button>
+          <input type="text" />
+        </div>
+      )}
+    </FocusLock>
   );
 }
 ```
