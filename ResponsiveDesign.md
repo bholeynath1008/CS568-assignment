@@ -29,7 +29,69 @@
 4. **Mobile-First Approach:** Start designing for mobile devices and then progressively enhance for larger screens.
 5. **Flexible Images and Media:** Ensure images and media elements adjust fluidly to different screen sizes using CSS or HTML attributes.
 
+
+
+
 **Examples:**
+
+1. **Viewport Meta Tag**:
+```
+<meta name="viewport" content="width=device-width, initial-scale=1">
+```
+
+2. **CSS Media Queries:**
+```
+/* Example of a media query for screens smaller than 768px */
+@media screen and (max-width: 768px) {
+    /* CSS rules specific to screens smaller than 768px */
+}
+```
+3. **Fluid Images:**
+```
+img {
+    max-width: 100%; /* Ensures the image does not exceed its container */
+    height: auto; /* Allows the image to scale proportionally */
+}
+```
+4. **Responsive Typography:**
+```
+body {
+    font-size: 16px; /* Base font size */
+}
+
+@media screen and (max-width: 768px) {
+    body {
+        font-size: 14px; /* Adjust font size for smaller screens */
+    }
+}
+```
+5. **Flexible Layouts with Flexbox || Grid:** (wrap, repeat(min-max function))
+```
+.container {
+    display: flex;
+    flex-direction: row; /* or column, depending on layout */
+    justify-content: space-between; /* or other values for alignment */
+    align-items: center; /* or other values for alignment */
+}
+```
+**Grid**
+```
+.container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* Example of responsive grid columns */
+    grid-gap: 20px; /* Spacing between grid items */
+}
+```
+6. **Viewport Unit**
+```
+.element {
+    width: 50vw; /* 50% of the viewport width */
+    height: 70vh; /* 70% of the viewport height */
+}
+
+```
+
+
 
 ```
 <!DOCTYPE html>
