@@ -1,4 +1,4 @@
-### jest free code camp : jest with javascript
+### jest freecodecamp : jest with javascript
 
 In testing frameworks like Jest or Mocha, The **describe** function takes two arguments: a description (usually a string) of the group of tests, and a function containing the individual test cases or nested describe blocks. 
 
