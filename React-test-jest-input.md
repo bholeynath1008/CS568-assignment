@@ -31,7 +31,17 @@
    - Description: Filters specific test cases for execution.
    - Shortcut: Not specified.
 
+### Describe
 
+- `describe` is a function provided by testing frameworks like Jest to **group related test cases** together.
+-  It takes two parameters: a `string description` of the test suite and a `function containing the test cases`.
+- It helps in **organizing tests and providing context**.
+- `describe.only` is used to **exclusively run** the described test suite while ignoring others. 
+- `describe.skip` is used to **skip** the described test suite.
+- you can write `nested describe` inside `describe`
+
+ 
+  
 **Test input box: _test_**
 * name
 * placeholder
