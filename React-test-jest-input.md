@@ -1,3 +1,37 @@
+### Test Case Run Options
+
+1. **Test Suites**: 
+   - Indicates the number of files.
+
+2. **How to Run Specific Test Files**:
+   - Syntax: `npm run test [FileName].test.js`
+   - Shortcut: `npm run test [FileName]`
+
+3. **Watch Mode (w)**:
+   - Description: Watch mode monitors changes and runs the latest modified file.
+   - Shortcut: `w`
+
+4. **Run Failed Test Cases (f)**:
+   - Description: Executes only the failed test cases.
+   - Shortcut: `f`
+
+5. **Run All Test Cases**:
+   - Description: Executes all test cases.
+   - Shortcut: Not specified. (Usually just running the test command)
+
+6. **Quit Watch Mode**:
+   - Description: Stops watch mode.
+   - Shortcut: Not specified.
+
+7. **Filter Test Files for Run**:
+   - Description: Filters test files to execute specific tests.
+   - Shortcut: Not specified.
+
+8. **Filter Test Case**:
+   - Description: Filters specific test cases for execution.
+   - Shortcut: Not specified.
+
+
 **Test input box: _test_**
 * name
 * placeholder
