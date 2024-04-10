@@ -1,3 +1,40 @@
+Here's the table with the common ARIA roles:
+
+| Role          | Syntax (HTML)                                | Description                                                                               |
+|---------------|-----------------------------------------------|-------------------------------------------------------------------------------------------|
+| alert         | `<div role="alert">...</div>`                | Represents an element containing alert or status message content.                        |
+| alertdialog   | `<div role="alertdialog">...</div>`          | Represents a dialog that conveys important information and requires the user's attention. |
+| application   | `<div role="application">...</div>`          | Represents a web application.                                                             |
+| article       | `<article role="article">...</article>`      | Denotes an article, such as a blog post or news article.                                   |
+| banner        | `<header role="banner">...</header>`         | Represents introductory content typically at the top of a page or section.                 |
+| button        | `<button role="button">...</button>`         | Denotes an interactive element that triggers actions.                                      |
+| checkbox      | `<input type="checkbox" role="checkbox">`    | Represents a checkbox input.                                                              |
+| combobox      | `<div role="combobox">...</div>`             | Represents a widget for selecting from a list or entering a custom value.                  |
+| dialog        | `<div role="dialog">...</div>`               | Represents a dialog box or window.                                                         |
+| form          | `<form role="form">...</form>`               | Represents a form or collection of form-related elements.                                  |
+| grid          | `<div role="grid">...</div>`                 | Represents a grid or table structure.                                                      |
+| gridcell      | `<div role="gridcell">...</div>`             | Represents a single cell within a grid or table.                                            |
+| link          | `<a role="link" href="#">...</a>`            | Represents an anchor link or hyperlink.                                                    |
+| listbox       | `<div role="listbox">...</div>`              | Represents a list box control for selecting items.                                          |
+| listitem      | `<li role="listitem">...</li>`               | Represents an item in a list.                                                              |
+| main          | `<main role="main">...</main>`               | Denotes the main content area of a document or application.                                 |
+| navigation    | `<nav role="navigation">...</nav>`           | Represents navigation links or menus.                                                      |
+| progressbar   | `<div role="progressbar">...</div>`          | Represents a visual progress indicator.                                                    |
+| radio         | `<input type="radio" role="radio">`          | Represents a radio button input.                                                            |
+| region        | `<div role="region">...</div>`               | Denotes a perceivable section of content relevant to a specific purpose or functionality.   |
+| search        | `<div role="search">...</div>`               | Represents a search box or form.                                                           |
+| slider        | `<input type="range" role="slider">`         | Represents a slider control for selecting a value from a range.                             |
+| spinbutton    | `<input type="number" role="spinbutton">`    | Represents a spin button or spinner control.                                               |
+| status        | `<div role="status">...</div>`               | Represents the status of a task or process.                                                |
+| switch        | `<div role="switch">...</div>`               | Represents a switch control, typically used for toggling between two states.                |
+| tab           | `<div role="tab">...</div>`                  | Represents a tab in a tablist.                                                             |
+| tabpanel      | `<div role="tabpanel">...</div>`             | Represents the content associated with a tab in a tablist.                                  |
+| textbox       | `<input type="text" role="textbox">`         | Represents a text input field.                                                             |
+| timer         | `<div role="timer">...</div>`                | Represents a timer that counts down or indicates the passage of time.                       |
+| toolbar       | `<div role="toolbar">...</div>`              | Represents a collection of commonly used controls or commands.                              |
+
+
+
 | Aspect               | Description                              | Use Cases                                              | Syntax                                   | Examples                                  | Others                                  |
 |----------------------|------------------------------------------|--------------------------------------------------------|------------------------------------------|-----------------------------------------|-----------------------------------------|
 | Semantic HTML        | Use appropriate HTML elements            | Buttons, Forms, Navigation, Headings                   | Utilize HTML5 semantics                  | `<button>Submit</button>`, `<form><input type="text"><button>Submit</button></form>` | (Keyboard, Mouse, Contrast) |
