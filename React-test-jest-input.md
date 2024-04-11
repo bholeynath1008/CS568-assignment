@@ -463,3 +463,157 @@ Snapshot
 * Make a standard for code coverage.
 
 */
+
+
+### Function props testing and function mocking
+`Understand Case 1 and Case 2:` Testing props in React
+**App.js**
+```
+import User from "./User";
+const App = (props) => {
+
+  return (
+    <div className="App">
+      <h1>Props Testing</h1>
+      <User name = "Anjana" />
+    </div>
+  );
+}
+
+export default App;
+```
+**User.js**
+```
+import React from 'react'
+const User = (props) => {
+  return (
+    CASE:1---------OR- ie. props only
+    <div>{props.name}</div>
+     CASE:2---------- ie. text + props
+    <div>User Name is {props.name}</div>
+  )
+}
+
+export default User
+```
+
+**App.test.js**
+```
+import { render, screen } from "@testing-library/react";
+import User from "./User";
+
+test("Props Testing", () => {
+  const name = "anil"    1) CREATE CONSTANT WHAT YOU ARE GOING TO PASSING, THAT WILL APPEAR IN UI, AND PASSING AS PROPS
+  render(<User name={name}/>);
+  CASE:1---------OR-
+  const user = screen.getByText(name); 2) CAPTURE THAT WHAT IS DISPLAY IN SCREEN BY TEXT ie.props
+  CASE:2----------
+  const user = screen.getByText(`User Name is ${name}`); 2.1) CAPTURE THAT WHAT IS DISPLAY IN SCREEN BY TEXT ie. text + props in UI
+  expect(user).toBeInTheDocument();
+
+})
+
+```
+------------------------------
+### Mock Function video: 42
+**App.js** Mock a function that is passed as `props`
+
+```
+import User from "./User";
+
+const App = (props) => {
+  return (
+    <div className="App">
+      <h1>Functional Props Testing</h1>
+      <button onClick={props.testFunction}>Click</button>
+    </div>
+  );
+}
+export default App;
+```
+
+**App.test.js**
+```
+// anil siddu
+import { render, screen } from "@testing-library/react"; // Importing render and screen from testing library
+import userEvent from "@testing-library/user-event"; // Importing userEvent library
+import App from "./App"; // Importing the component to be tested
+
+test("Functional Props Testing", async() => {
+  const testFunction = jest.fn(); // Creating a mock function using Jest's mock function
+  userEvent.setup(); // Setting up userEvent library
+  render(<App testFunction={testFunction}/>); // Rendering the component with the mock function passed as a prop
+  const btn = screen.getByRole("button"); // Finding the button element using getByRole from testing-library/react
+  await userEvent.click(btn); // Simulating a click event on the button
+  The await keyword is used before userEvent.click(btn) to ensure that the click event is fully processed before moving on to the next line of code
+  expect(testFunction).toBeCalled(); // Checking if the mock function has been called
+})
+```
+```
+// cgpt case pass:
+import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+import App from "./App";
+
+test("Functional Props Testing", async () => {
+  const testFunction = jest.fn(); // This will mock the function
+  render(<App testFunction={testFunction} />);
+  const btn = screen.getByRole("button");
+  userEvent.click(btn); // No need to await here
+  expect(testFunction).toBeCalled();
+});
+
+```
+
+| Syntax                                    | Description                                               | Example                                                |
+|-------------------------------------------|-----------------------------------------------------------|--------------------------------------------------------|
+| `jest.fn()`                               | Creates a new, empty mock function.                       | `const mockFunction = jest.fn();`                      |
+| `jest.fn(implementation)`                 | Creates a mock function with a custom implementation.    | `const mockFunction = jest.fn(() => 'mocked result');` |
+| `jest.fn().mockReturnValue(value)`        | Sets a return value for the mock function.                | `const mockFunction = jest.fn().mockReturnValue(42);`  |
+| `jest.fn().mockResolvedValue(value)`      | Sets a resolved promise value for the mock function.      | `const mockFunction = jest.fn().mockResolvedValue('resolved value');` |
+| `jest.fn().mockRejectedValue(value)`      | Sets a rejected promise value for the mock function.      | `const mockFunction = jest.fn().mockRejectedValue(new Error('rejected value'));` |
+| `jest.fn().mockImplementationOnce(fn)`    | Sets a one-time custom implementation for the mock function. | `const mockFunction = jest.fn().mockImplementationOnce((arg) => arg * 2);` |
+| `jest.fn().mockReturnValueOnce(value)`    | Sets a one-time return value for the mock function.      | `const mockFunction = jest.fn().mockReturnValueOnce('first call').mockReturnValue('subsequent calls');` |
+| `jest.fn().mockResolvedValueOnce(value)`  | Sets a one-time resolved promise value for the mock function. | `const mockFunction = jest.fn().mockResolvedValueOnce('first call').mockResolvedValue('subsequent calls');` |
+| `jest.fn().mockRejectedValueOnce(value)`  | Sets a one-time rejected promise value for the mock function. | `const mockFunction = jest.fn().mockRejectedValueOnce(new Error('first call')).mockRejectedValue(new Error('subsequent calls'));` |
+
+**Possible Test Cases:**
+
+1. **Basic Invocation**: Ensure the mocked function is called.
+2. **Custom Implementation**: Test that the mocked function behaves as expected with a custom implementation.
+3. **Return Values**: Test different return values set for the mocked function.
+4. **Promises**: Test the behavior of the mocked function when it returns promises.
+5. **One-Time Implementations**: Ensure that one-time implementations or return values work as expected.
+6. **Error Handling**: Test how the mocked function handles errors, especially with promises.
+
+1. **Import Necessary Testing Utilities:**
+```
+import { render, fireEvent } from '@testing-library/react';
+import '@testing-library/jest-dom/extend-expect'; // for additional matchers
+import YourComponent from './YourComponent'; // import the component you want to test
+```
+2. **Mock the Function using jest.fn():**
+```
+// Mock the function you want to test
+const mockFunction = jest.fn();
+```
+3. **Render the Component You Want to Test:**
+```
+test('your test description', () => {
+  const { getByTestId } = render(<YourComponent yourFunction={mockFunction} />);
+  // Use getByTestId or other queries to get elements for interaction
+  // Replace "yourFunction" with the prop name where your function is passed
+});
+```
+4. **Simulate an Interaction That Should Trigger the Function:**
+```
+const button = getByTestId('your-button-testid'); // replace with your button's test id
+fireEvent.click(button); // simulate a click event
+// Or any other interaction like typing in an input field, etc.
+```
+5. **Assert That the Function Was Called As Expected:**
+```
+expect(mockFunction).toHaveBeenCalled(); // Assert that the function was called
+// You can add more specific assertions based on your function's behavior
+```
+
