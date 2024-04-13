@@ -11,3 +11,7 @@
 5. **sticky** `navbar` : stick at it same positon (nav bar), positioned based on the user's scroll position. Initially behaves like `relative`, but switches to `fixed` once a specified threshold is reached during scrolling; temporarily removed from normal flow. (`Normal Flow removed`)
 
 **Z-index**: Elements with `position` other than `static` create stacking contexts, affecting their overlap order.
+
+
+https://layout.bradwoods.io/customize
+https://readme.so/
