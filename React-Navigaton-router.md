@@ -129,3 +129,194 @@ OUTPUT: { "pathname": "/user/8", "search": "", "hash": "", "state": "Saroj","key
 export default User
 ```
 
+--------------------------------
+### useLocation
+--------------------------------
+The `useLocation` hook in React Router is used to return the current location of a React component. The `useLocation` returns the current location as an object and comes with props such as:
+
+- `pathname`: This property represents the path of the current URL.: `pathname: "/users"`
+- `state`: This property provides any state data associated with the location. It's typically used for passing state between different routes or components. `state: { id: 1, name: "example" }`
+- `search`: The search property contains the query string parameters of the URL. `Output of location.search: //?userId=5&type=user` || search: "?query=example"
+- `key`: The key property uniquely identifies the current location among sibling locations. : `key: "abc123"`
+- `hash`: This property contains the hash fragment of the URL, typically used for anchor links within a page. `hash: "#section1"`
+These props can be used with the `useEffect` hook to perform side effects such as clicks, `onScroll`, or returning state parsed to a Link component.
+
+#### Use Cases of `useLocation` Hook in React Router
+
+The `useLocation` hook in React Router is valuable for:
+
+### 1. Getting Current Location
+
+It retrieves the current URL location in a React component, useful for tasks like conditional rendering or updating state based on the URL.
+
+### 2. Accessing Location Properties
+
+Provides access to properties like: pathname, search, state, key and hash of the location.
+
+### 3. Dynamic Rendering and Navigation
+
+Enables dynamic component rendering or navigation based on URL properties. For instance, conditionally rendering components based on pathname or navigating to different routes based on conditions.
+
+
+---------------------------------
+useSearchParams
+---------------------------------
+UNDERSTAND:
+###### 1. Route URL in App.js
+When defining routes that include query parameters, such as /user, utilize the path attribute without using : for query parameters
+```
+<Route path="/user" element={<User />} />
+```
+###### 2. Dynamically routing with query string in User.js
+* Within your User.js component, set up dynamic routing by manipulating the search parameters.
+* Use a function, let's call it setSearchParams, triggered by a `button click or any other event`, to dynamically modify the search parameters.
+###### 3. Two ways of doing NavLink in Users.jsx
+###### 4. Looping through and logging all search parameters
+* To log all search parameters, access the search property of the location object.
+* Split the search string to get individual parameters and their values.
+```
+// Get the search parameters from the URL
+const searchParams = new URLSearchParams(window.location.search);
+
+// Loop through each parameter and log its name and value
+searchParams.forEach((value, key) => {
+  console.log(`${key}: ${value}`);
+});
+```
+```
+  // Looping through and logging all search parameters
+    for (const [key, value] of searchParams.entries()) {
+        console.log("Parameter:", key, "Value:", value); // Example: userId=5
+    }
+```
+```
+    // Another way of looping through and logging all search parameters
+    for (const entry of searchParams.entries()) {
+        const [param, value] = entry;
+        console.log("Parameter:", param, "Value:", value); // Example: userId=5
+    }
+```
+
+###### 5. Extracting specific parameters from the search string
+* Use the URLSearchParams API to extract specific parameters from the search string.
+* For instance, if you want to extract the userId parameter, you can do:
+```
+const searchParams = new URLSearchParams(window.location.search);
+const id = searchParams.get('userId'); // 5
+```
+* This will retrieve the value of the userId parameter from the URL's query string.
+
+#### Example:
+
+**App.js**
+```
+  function App() {
+  return (
+    <div className="App">
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/users" element={<Users />} />
+          <Route path="/user" element={<User />} /> // check routing here : 
+        </Routes>
+      </BrowserRouter>
+    </div>
+  );
+}
+export default App;
+```
+**Users.js**
+```
+import React from 'react';
+import { NavLink } from 'react-router-dom';
+
+const User = () => {
+    // Array of user data
+    const userList = [
+        { name: "Kalil", id: 5 },
+        { name: "Anjana", id: 6 },
+        { name: "Saroj", id: 8 },
+        { name: "Joras", id: 9 },
+    ];
+
+    return (
+        <div>
+            {/* Render user list */}
+            <ul>
+                {userList.map(user => (
+                    <li key={user.id}>
+                        {/* Create NavLink for each user */}
+                        <NavLink
+                            to={{
+                                pathname: '/user',
+                                search: `?userId=${user.id}&type=admin`, // Construct search string
+                                state: { userName: user.name } // Pass user name as state
+                            }}
+                        >
+                            {user.name}
+                        </NavLink>
+                        ---OR--replace <NavLink/>--
+                         <NavLink to={`/user?userId=${user.id}&type=admin`} state={user.name}>{user.name}</NavLink>
+                        ----OR---
+                    </li>
+                ))}
+            </ul>
+        </div>
+    );
+}
+
+export default User;
+```
+
+**User.js**
+```
+import React from 'react';
+import { useLocation, useSearchParams } from 'react-router-dom';
+
+const User = () => {
+    // Using the useSearchParams hook to manage search parameters from the URL
+    const [searchParams, setSearchParams] = useSearchParams();
+
+    // Extracting specific parameters from the search string
+    const id = searchParams.get('userId');
+    const type = searchParams.get('type');
+
+    // Logging all search parameters
+    console.log("All search parameters:", searchParams);
+
+    // Logging specific parameters (userId and type)
+    console.log("User Id:", id, "Type:", type);
+
+    // Looping through and logging all search parameters
+    for (const [key, value] of searchParams.entries()) {
+        console.log("Parameter:", key, "Value:", value); // Example: userId=5
+    }
+
+    // Another way of looping through and logging all search parameters
+    for (const entry of searchParams.entries()) {
+        const [param, value] = entry;
+        console.log("Parameter:", param, "Value:", value); // Example: userId=5
+    }
+
+    // Getting the current location and logging the search string
+    const location = useLocation();
+    console.log("Search string in location:", location.search); // Example: ?userId=5&type=user
+
+    return (
+        <div>
+            <h3>User List</h3>
+            {/* Displaying the extracted parameters */}
+            <h1>User Id is {id} and type is {type}</h1>
+            {/* Button to demonstrate adding query dynamically */}
+            <button onClick={() => setSearchParams({ newQuery: 'xyz' })}>Add query string</button> // it will re-route to : users?newQuery='xyz'
+        </div>
+    );
+}
+
+export default User;
+// Note: URLSearchParams {size: 1} indicates that there is one parameter in the query string;
+// To dynamically add query parameters, use the setSearchParams function provided by the useSearchParams hook.
+// No space around ?userId=${user.id}&type=admin
+```
+
