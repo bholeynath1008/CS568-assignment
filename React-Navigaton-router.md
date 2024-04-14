@@ -1,13 +1,13 @@
 # React Navigation
 UNDERSTAND:
-### Query Params in React Router:
+### 1. Query Params in React Router:
 When using React Router, you can define dynamic segments in your route paths using colons (`:`) followed by the parameter name. For example, in the route `"/user/:id"`, `:id` is a placeholder for the actual user ID.
 
-### Getting Current Location in React Router:
+### 2. Getting Current Location in React Router:
 React Router provides a hook called `useLocation()` which allows you to access the current location object. This includes information such as pathname, search, hash, state, and key.
 { "pathname": "/user/8", "search": "", "hash": "", "state": "Saroj", "key": "fmyh2y0z" }
 
-### Example of Current Component Location:
+### 2.1. Example of Current Component Location:
 The current location object may look like this:
 ```
 {
@@ -18,11 +18,11 @@ The current location object may look like this:
   "key": "fmyh2y0z"
 }
 ```
-### Passing Data via NavLink and Consuming it Using `useLocation()`
+### 3. Passing Data via NavLink and Consuming it Using `useLocation()`
 
 You can pass data via `NavLink` using the `to` prop and an object containing the data you want to pass. In the component where you want to consume the passed data, you can use the `useLocation()` hook to access the location object and retrieve the passed state.
 
-#### Passing Data via NavLink
+### 4. Passing Data via NavLink
 
 When using `NavLink`, you can pass data by providing an object with the state property in the `to` prop.
 
@@ -38,7 +38,7 @@ import { NavLink } from 'react-router-dom';
   Link Text
 </NavLink>
 ```
-#### Consuming Passed Data Using `useLocation()`
+### 5. Consuming Passed Data Using `useLocation()`
 
 In the component where you want to consume the passed data, you can use the `useLocation()` hook from `react-router-dom`.
 
@@ -128,3 +128,4 @@ OUTPUT: { "pathname": "/user/8", "search": "", "hash": "", "state": "Saroj","key
 
 export default User
 ```
+
