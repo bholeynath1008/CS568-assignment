@@ -1,3 +1,4 @@
+useSearchParams link: https://www.youtube.com/watch?v=OjNyNFTsB68
 # React Navigation
 UNDERSTAND:
 ### 1. Query Params in React Router:
