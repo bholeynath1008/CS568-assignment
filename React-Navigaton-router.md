@@ -320,4 +320,36 @@ export default User;
 // To dynamically add query parameters, use the setSearchParams function provided by the useSearchParams hook.
 // No space around ?userId=${user.id}&type=admin
 ```
+---------------------------------------
+#### useSearchParamsExample
+----------
 
+```
+const [searchParams, setSearchParams] = useSearchParams();
+console.log(searchParams); // This logs the URLSearchParams object, which contains key-value pairs from the current route. 
+You can loop through it to access these key-value pairs.
+```
+Case 1: Good Way
+```
+const User = () => {
+    // Using the useSearchParams hook to manage search parameters from the URL
+    const [searchParams, setSearchParams] = useSearchParams();
+
+    // Using entries() to iterate over searchParams
+    for (const [key, value] of searchParams.entries()) {
+        console.log("Key and Value", key, value);
+    }
+}
+```
+
+Case 2: Work But Bad Way
+```
+searchParams.forEach((k,v)=> {
+        console.log("Key and Value",k,v);
+    })
+```
+Case 2: Best Way (loop and insert value in object params)
+```
+const params = Object.fromEntries(searchParams.entries());
+console.log("params: ", params);
+```
