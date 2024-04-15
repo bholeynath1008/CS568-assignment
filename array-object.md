@@ -135,3 +135,91 @@ const hasProperty = object.hasOwnProperty(property);
 ```
 
 Remember to replace `array`, `object`, `element`, `condition`, etc., with your actual array, object, element, and conditions.
+---------------
+## Destructure
+
+### Destructuring an object:
+```
+// Object to destructure
+const person = {
+  name: 'John',
+  age: 30,
+  city: 'New York'
+};
+
+// Destructuring syntax
+const { name, age, city } = person;
+
+console.log(name); // John
+console.log(age); // 30
+console.log(city); // New York
+```
+
+### Destructuring an array:
+// Array to destructure
+const colors = ['red', 'green', 'blue'];
+
+// Destructuring syntax
+const [firstColor, secondColor, thirdColor] = colors;
+
+console.log(firstColor); // red
+console.log(secondColor); // green
+console.log(thirdColor); // blue
+
+### Destructuring with default values:
+```
+// Object to destructure
+const person = {
+  name: 'John',
+  age: 30
+};
+
+// Destructuring with default value
+const { name, age, city = 'New York' } = person;
+
+console.log(city); // New York
+
+```
+### Nested object destructuring:
+```
+// Nested object to destructure
+const person = {
+  name: 'John',
+  age: 30,
+  address: {
+    city: 'New York',
+    country: 'USA'
+  }
+};
+
+// Nested destructuring syntax
+const { name, age, address: { city, country } } = person;
+
+console.log(city); // New York
+console.log(country); // USA
+```
+
+### Rest syntax with object and array destructuring:
+```
+// Object to destructure
+const person = {
+  name: 'John',
+  age: 30,
+  city: 'New York',
+  country: 'USA'
+};
+
+// Rest syntax in object destructuring
+const { name, ...rest } = person;
+
+console.log(rest); // { age: 30, city: 'New York', country: 'USA' }
+
+// Array to destructure
+const numbers = [1, 2, 3, 4, 5];
+
+// Rest syntax in array destructuring
+const [firstNumber, secondNumber, ...restNumbers] = numbers;
+
+console.log(restNumbers); // [3, 4, 5]
+
+```
