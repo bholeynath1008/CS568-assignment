@@ -142,7 +142,46 @@ You have made three commits, but the third commit (commit 3: HEAD) was a mistake
 - **Use `git reset`** for local cleanup before you've shared your changes with others, as it simplifies history but at the risk of losing changes.
 
 
+## Working and merge with main branch 
+(main ma bhayeko change anjana branch ma laune ani locally anjana ma main merge garne)
+1. **Create and switch to the Anjana branch:**
+   ```bash
+   git checkout -b Anjana
+   ```
 
+2. **Pull the latest changes from the remote Anjana branch:**
+   ```bash
+   git pull origin Anjana
+   ```
+
+3. **Work on the Anjana branch:**
+   - Make your changes
+
+4. **If anyone is working with the main branch:**
+   ```bash
+   4.1 ` Switch to the main branch`
+   git checkout main
+   
+   4.2. `Pull the latest changes from the remote main branch`
+   git pull origin main
+   ```
+
+5. **Switch back to the Anjana branch:**
+   ```bash
+   git checkout Anjana
+   ```
+
+6. **Merge the changes from main into Anjana:** (main ma bhayeko change anjana branch ma laune ani locally anjana ma main merge garne, main branch ma kei effect hudaina. Anajana branch ma basera, main li merge garne)
+   ```bash
+   git merge main
+   ```
+
+7. **Push the merged changes to the remote Anjana branch:**
+   ```bash
+   git push origin Anjana
+   ```
+
+This sequence ensures you're working on the latest Anjana branch, incorporate changes from the main branch into your Anjana branch, and then push those changes to the remote Anjana branch.
 
 
 
