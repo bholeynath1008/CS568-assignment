@@ -183,6 +183,65 @@ You have made three commits, but the third commit (commit 3: HEAD) was a mistake
 
 This sequence ensures you're working on the latest Anjana branch, incorporate changes from the main branch into your Anjana branch, and then push those changes to the remote Anjana branch.
 
+# Case 1: Discard All Changes in the Working Directory
+## Discard changes in tracked files
+git checkout -- .
 
+## Remove all untracked files and directories
+git clean -fd
+
+# 
+
+
+Sure, I can help you with that. It sounds like you're working with Git and need to undo changes in two different scenarios: 
+
+1. Discarding all changes in your working directory.
+2. Removing changes from the staging area.
+
+Here are the commands you'll need for each case:
+
+### Case 1: Discard All Changes in the Working Directory
+To discard all local changes in your working directory, you can use the following commands:
+
+```bash
+# Discard changes in tracked files
+git checkout -- .
+
+# Remove all untracked files and directories
+git clean -fd
+```
+
+- `git checkout -- .` will revert all changes in tracked files.
+- `git clean -fd` will remove all untracked files and directories. Use `-n` to see what would be removed without actually deleting anything.
+
+### Case 2: Remove Changes from the Staging Area
+If you have changes in the staging area that you want to remove, you can use the following commands:
+
+```bash
+# Unstage all changes
+git reset
+```
+
+- `git reset` without any additional arguments will move all changes from the staging area back to the working directory.
+
+If you have also committed the changes and want to undo the commit, you can use:
+
+```bash
+# Undo the last commit and keep changes in the working directory
+git reset --soft HEAD~1
+```
+
+- `git reset --soft HEAD~1` will undo the last commit but keep the changes in your working directory.
+
+If you want to undo the last commit and discard the changes:
+
+```bash
+# Undo the last commit and discard changes
+git reset --hard HEAD~1
+```
+
+- `git reset --hard HEAD~1` will undo the last commit and discard the changes.
+
+Be careful with `git reset --hard` as it will discard changes permanently.
 
 
