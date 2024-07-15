@@ -243,5 +243,55 @@ git reset --hard HEAD~1
 - `git reset --hard HEAD~1` will undo the last commit and discard the changes.
 
 Be careful with `git reset --hard` as it will discard changes permanently.
+-----------------------
+### Discard Git Commit Operations
+
+#### 1. Discard Local Changes (Not Yet Committed)
+
+```
+git checkout -- .
+```
+#### 2. Undo the Last Commit (Not Pushed Yet) || Remove changes and commit both
+```
+git reset --hard HEAD^
+```
+**This command removes the last commit along with all changes made in that commit. Be cautious as it permanently deletes changes.**
+
+#### 3. Undo a Commit and Keep Changes (Remove commit only, but you can log that commit but that commit has no effect)
+```
+git reset HEAD^
+```
+
+
+4. Discard a Specific Commit (Already Pushed)
+Soft Reset (Keep changes staged):
+
+bash
+Copy code
+git reset --soft HEAD^
+Mixed Reset (Keep changes unstaged):
+
+bash
+Copy code
+git reset HEAD^
+Hard Reset (Discard commit and changes irreversibly):
+
+bash
+Copy code
+git reset --hard HEAD^
+5. If Already Pushed and Shared with Others
+Consider reverting the commit instead of rewriting history:
+
+bash
+Copy code
+git revert <commit-hash>
+Communicate with your team to handle the situation without disrupting collaborative efforts.
+
+Additional Notes:
+Always proceed with caution, especially with git reset --hard, as it permanently deletes changes.
+Create a backup branch (git branch backup) before performing potentially destructive operations if unsure.
+css
+Copy code
+
 
 
