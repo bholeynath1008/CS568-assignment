@@ -131,3 +131,42 @@ sampleList.sort((a, b) => {
 console.log(sampleList);
 
 ```
+===========
+    update normalize fn:
+```
+function normalizeValue(value) {
+    // Normalize spaces and hyphens, allowing for letters or digits after the letter part
+    const match = value.match(/^([A-Za-z]+)([- ]?)([A-Za-z\d]*)(\d*)$/);
+    
+    if (match) {
+        // Destructure the match result into its components
+        const [ , letterPart, spaceHyphenPart, additionalPart, numberPart ] = match;
+        
+        // Assign priority: 0 for space, 1 for hyphen
+        const priority = spaceHyphenPart === ' ' ? 0 : 1; // Space has higher priority than hyphen
+        
+        // Return an array containing letter part, priority, and numeric part (as an integer)
+        return [ letterPart + additionalPart, priority, numberPart ? parseInt(numberPart, 10) : 0 ];
+    }
+    // Return the original value, with priority 1 and number 0 for unmatched patterns
+    return [ value, 1, 0 ];
+}
+
+```
+/^([A-Za-z]+)([- ]?)([A-Za-z\d]*)?(\d*)$/
+Breakdown of the New Pattern
+^: Asserts the start of the string.
+([A-Za-z]+): Captures the initial letter part.
+([- ]?): Captures an optional space or hyphen.
+([A-Za-z\d]*)?: Captures zero or more letters or digits after the space or hyphen. This allows for additional alphanumeric characters like "B" in "Apple-B1".
+*(\d)**: Captures zero or more digits at the end of the string.
+$: Asserts the end of the string.
+    -----
+    Example Matches
+Using the new regex pattern, here’s how it would match the values:
+
+"A-10": Matches as ["A", "-", "10"]
+"B 5": Matches as ["B", " ", "5"]
+"Apple-B1": Matches as ["AppleB", "-", "1"]
+"Apple B1 D": Matches as ["Apple", " ", "1"] (as part of the earlier description).
+
