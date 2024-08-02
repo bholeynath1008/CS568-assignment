@@ -71,3 +71,111 @@ export default function SimplePopover() {
     </div>
   );
 }
+
+
+
+---------------------------
+
+  /* eslint-disable */
+import React, { useState, useEffect, useRef } from 'react';
+import classes from './ColumnSelectFilter.module.css';
+import { Button, Popover, Box, FormControl, FormGroup, FormControlLabel, Checkbox, Modal } from '@mui/material';
+
+function ColumnSelectFilter({ list, clickCallback, id, title, values, testId, openCallback, mode, isStaticFilter }) {
+  const [selectedItems, setSelectedItems] = useState([]);
+  const [isOpen, setIsOpen] = useState(false);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const popoverRef = useRef(null);
+
+  // Handler for button click to open the popover
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+    setIsOpen(true);
+  };
+
+  // Handler for opening the modal
+  const handleOpenModal = () => {
+    setIsModalOpen(true);
+  };
+
+  // Handler for closing the modal
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
+
+  // Close popover when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (popoverRef.current && !popoverRef.current.contains(event.target)) {
+        setIsOpen(false);
+        setAnchorEl(null);
+      }
+    };
+    
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [popoverRef]);
+
+  // Handler for item click in the popover
+  const handleItemClick = (item) => {
+    if (selectedItems.includes(item.value)) {
+      setSelectedItems(selectedItems.filter((i) => i !== item.value));
+    } else {
+      setSelectedItems([...selectedItems, item.value]);
+    }
+    clickCallback(item);
+  };
+
+  return (
+    <div>
+      <Button variant="contained" onClick={handleClick}>Open Popover</Button>
+
+      <Popover
+        open={isOpen}
+        anchorEl={anchorEl}
+        onClose={() => setIsOpen(false)}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+        transformOrigin={{ vertical: 'top', horizontal: 'left' }}
+        ref={popoverRef}
+      >
+        <div className={classes.popoverContent}>
+          <FormControl component="fieldset">
+            <FormGroup>
+              {list.map((item, index) => (
+                <FormControlLabel
+                  key={index}
+                  control={
+                    <Checkbox
+                      checked={selectedItems.includes(item.value)}
+                      onChange={() => handleItemClick(item)}
+                      name={item.label}
+                    />
+                  }
+                  label={item.label}
+                />
+              ))}
+            </FormGroup>
+          </FormControl>
+        </div>
+      </Popover>
+
+      <Button variant="contained" onClick={handleOpenModal}>Open Modal</Button>
+
+      <Modal
+        open={isModalOpen}
+        onClose={handleCloseModal}
+      >
+        <Box>
+          <h2>Modal Content</h2>
+          <p>This is the content of the modal.</p>
+          <Button onClick={handleCloseModal}>Close</Button>
+        </Box>
+      </Modal>
+    </div>
+  );
+}
+
+export default ColumnSelectFilter;
