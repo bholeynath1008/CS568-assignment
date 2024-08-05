@@ -155,3 +155,90 @@ The component is built on top of the Modal component. The scroll and click away 
 
 ## Popper
 Clicking away does not hide the Popper component. If you need this behavior, you can use ClickAwayListener - see the example in the menu documentation section.
+
+  //////////////////////
+  import React, { useState, useEffect } from 'react';
+import { Button, Popper, Backdrop, Box } from '@mui/material';
+
+const ModalPopper = () => {
+  const [anchorEl, setAnchorEl] = useState(null);
+  const open = Boolean(anchorEl);
+
+  const handleOpen = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  // Disable body scroll when the Popper is open
+  useEffect(() => {
+    if (open) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = ''; // Clean up on unmount
+    };
+  }, [open]);
+
+  return (
+    <div>
+      <Button variant="contained" onClick={handleOpen}>
+        Open Popper
+      </Button>
+      <Popper
+        open={open}
+        anchorEl={anchorEl}
+        placement="bottom"
+        style={{ zIndex: 1300 }} // Ensure it appears above other content
+      >
+        <Box
+          sx={{
+            bgcolor: 'background.paper',
+            border: '1px solid',
+            borderColor: 'divider',
+            boxShadow: 3,
+            p: 2,
+            borderRadius: 1,
+          }}
+        >
+          <h2>Modal Content</h2>
+          <p>This is a Popper that behaves like a modal.</p>
+          <Button variant="outlined" onClick={handleClose}>
+            Close
+          </Button>
+        </Box>
+      </Popper>
+      <Backdrop open={open} onClick={handleClose} sx={{ zIndex: 1200 }}>
+        {/* Optional: You can add any additional content to the backdrop here */}
+      </Backdrop>
+    </div>
+  );
+};
+
+export default ModalPopper;
+
+
+
+Explanation of the Code:
+State Management:
+
+anchorEl is used to control the visibility of the Popper.
+open is a boolean indicating if the Popper is open.
+Opening and Closing:
+
+handleOpen sets the anchor element to show the Popper.
+handleClose sets the anchor element to null, hiding the Popper.
+Scroll Management:
+
+The useEffect hook toggles the body's overflow style to disable scrolling when the Popper is open.
+Backdrop:
+
+The Backdrop component is used to create a semi-transparent overlay behind the Popper. Clicking on it will close the Popper.
+Styling:
+
+The Popper is styled with MUI’s Box component for consistency with MUI’s design language.
+This approach will effectively make your Popper behave like a modal, blocking user actions and scrolling when it is open.
