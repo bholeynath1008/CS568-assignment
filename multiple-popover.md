@@ -100,3 +100,179 @@ const Experiences = memo((props) => {
 });
 
 ```
+
+### simple way
+State Management: Use a state to keep track of the currently open popover.
+Event Handling: Update the state when a popover is opened or closed.
+```
+import React, { useState } from 'react';
+import Popper from '@mui/material/Popper';
+import Button from '@mui/material/Button';
+
+const PopperExample = () => {
+  const [openPopperId, setOpenPopperId] = useState(null);
+
+  const handleClick = (id) => {
+    setOpenPopperId((prev) => (prev === id ? null : id));
+  };
+
+  return (
+    <div>
+      {['popper1', 'popper2', 'popper3'].map((id) => (
+        <div key={id}>
+          <Button onClick={() => handleClick(id)}>
+            Toggle {id}
+          </Button>
+          <Popper open={openPopperId === id} anchorEl={document.getElementById(id)}>
+            <div id={id} style={{ padding: '10px', background: 'lightgrey' }}>
+              Content of {id}
+            </div>
+          </Popper>
+        </div>
+      ))}
+    </div>
+  );
+};
+
+export default PopperExample;
+
+```
+Key Points
+useState: The openPopperId state variable keeps track of the ID of the currently open popover. If it’s null, no popover is open.
+handleClick: This function sets the openPopperId state to the clicked popper’s ID. If the same popper is clicked again, it closes the popper by setting openPopperId to null.
+Rendering Popper: The open prop of the Popper component checks if the current popper's ID matches openPopperId to determine whether it should be open or not.
+--------------------
+## Another way:
+
+To achieve the behavior where opening one popper closes any other open poppers in a Material-UI (MUI) React application, you can manage the state of the open poppers in a way that only allows one to be open at a time.
+
+Here's a basic approach using React state and MUI's Popper component:
+
+1. **State Management**: Use a single state to keep track of the currently open popper.
+2. **Handlers**: Create handlers to open and close poppers.
+3. **Conditional Rendering**: Render poppers based on the state.
+
+Here’s an example implementation:
+
+```
+import React, { useState } from 'react';
+import { Popper, Button } from '@mui/material';
+
+const PopperExample = () => {
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [currentPopper, setCurrentPopper] = useState(null);
+
+  const handleClick = (event, popperId) => {
+    if (currentPopper === popperId) {
+      setAnchorEl(null);
+      setCurrentPopper(null);
+    } else {
+      setAnchorEl(event.currentTarget);
+      setCurrentPopper(popperId);
+    }
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+    setCurrentPopper(null);
+  };
+
+  return (
+    <div>
+      <Button onClick={(event) => handleClick(event, 'popper1')}>Toggle Popper 1</Button>
+      <Popper open={currentPopper === 'popper1'} anchorEl={anchorEl}>
+        <div style={{ padding: '10px', backgroundColor: 'white', border: '1px solid' }}>
+          Popper 1 Content
+          <Button onClick={handleClose}>Close</Button>
+        </div>
+      </Popper>
+
+      <Button onClick={(event) => handleClick(event, 'popper2')}>Toggle Popper 2</Button>
+      <Popper open={currentPopper === 'popper2'} anchorEl={anchorEl}>
+        <div style={{ padding: '10px', backgroundColor: 'white', border: '1px solid' }}>
+          Popper 2 Content
+          <Button onClick={handleClose}>Close</Button>
+        </div>
+      </Popper>
+
+      {/* Add more poppers as needed */}
+    </div>
+  );
+};
+
+export default PopperExample;
+```
+
+markdown
+Copy code
+To achieve the behavior where opening one popper closes any other open poppers in a Material-UI (MUI) React application, you can manage the state of the open poppers in a way that only allows one to be open at a time.
+
+Here's a basic approach using React state and MUI's Popper component:
+
+1. **State Management**: Use a single state to keep track of the currently open popper.
+2. **Handlers**: Create handlers to open and close poppers.
+3. **Conditional Rendering**: Render poppers based on the state.
+
+Here’s an example implementation:
+
+```jsx
+import React, { useState } from 'react';
+import { Popper, Button } from '@mui/material';
+
+const PopperExample = () => {
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [currentPopper, setCurrentPopper] = useState(null);
+
+  const handleClick = (event, popperId) => {
+    if (currentPopper === popperId) {
+      setAnchorEl(null);
+      setCurrentPopper(null);
+    } else {
+      setAnchorEl(event.currentTarget);
+      setCurrentPopper(popperId);
+    }
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+    setCurrentPopper(null);
+  };
+
+  return (
+    <div>
+      <Button onClick={(event) => handleClick(event, 'popper1')}>Toggle Popper 1</Button>
+      <Popper open={currentPopper === 'popper1'} anchorEl={anchorEl}>
+        <div style={{ padding: '10px', backgroundColor: 'white', border: '1px solid' }}>
+          Popper 1 Content
+          <Button onClick={handleClose}>Close</Button>
+        </div>
+      </Popper>
+
+      <Button onClick={(event) => handleClick(event, 'popper2')}>Toggle Popper 2</Button>
+      <Popper open={currentPopper === 'popper2'} anchorEl={anchorEl}>
+        <div style={{ padding: '10px', backgroundColor: 'white', border: '1px solid' }}>
+          Popper 2 Content
+          <Button onClick={handleClose}>Close</Button>
+        </div>
+      </Popper>
+
+      {/* Add more poppers as needed */}
+    </div>
+  );
+};
+
+export default PopperExample;
+Explanation:
+State Variables:
+
+anchorEl: Tracks the element that the popper is anchored to.
+currentPopper: Tracks which popper is currently open.
+handleClick Function:
+
+Checks if the clicked popper is already open. If yes, it closes it. If no, it sets the clicked popper as the current open popper.
+handleClose Function:
+
+Closes the currently open popper.
+Rendering the Popper:
+
+Each popper is rendered conditionally based on the currentPopper state.
