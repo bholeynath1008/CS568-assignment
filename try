@@ -1,158 +1,79 @@
-import React, { useEffect, useState } from 'react';
-import axios from "axios";
-import { v4 as uuidv4 } from "uuid";
-import './App.css';
+import React, { useState } from 'react';
+import AsyncSelect from 'react-select/async';
 
-function App() {
-  const [mainData, setMainData] = useState([]);
+// Mock API function to fetch countries
+const fetchCountries = async () => {
+  const response = await fetch('https://restcountries.com/v3.1/all');
+  const countries = await response.json();
 
-  useEffect(() => {
-    fetchStudentData();
-  }, []);
+  // Extract the first 10 countries with their names and dialing codes
+  return countries.slice(0, 10).map((country) => ({
+    label: country.name.common,
+    value: country.cca2,
+    code: `${country.idd.root || ''}${country.idd.suffixes ? country.idd.suffixes[0] : ''}`
+  }));
+};
 
-  function fetchStudentData() {
-    axios.get("http://localhost:4000/products")
-      .then(response => {
-        setMainData(response.data);
-      })
-      .catch(error => {
-        console.log(error);
-      });
-  }
-
-  function addProduct(product) {
-    axios.post("http://localhost:4000/products", product)
-      .then(response => {
-        setMainData([...mainData, response.data]);
-      })
-      .catch(error => {
-        console.log(error);
-      });
-  }
-
-  function deleteProduct(id) {
-    axios.delete("http://localhost:4000/products/" + id)
-      .then(response => {
-        setMainData(mainData.filter(product => product.id !== id))
-      })
-      .catch(error => {
-        console.log(error);
-      });
-  }
-
-  function incrementCount(id) {
-    const copyData = [...mainData];
-    const findIndex = copyData.findIndex(product => product.id === id);
-    copyData[findIndex] = {
-      ...copyData[findIndex],
-      count: copyData[findIndex].count + 1
-    };
-    axios.put("http://localhost:4000/products/" + id, copyData[findIndex])
-      .then(response => {
-        setMainData(copyData);
-      })
-      .catch(error => {
-        console.log(error);
-      });
-  }
-
-  function decrementCount(id) {
-    const copyData = [...mainData];
-    const findIndex = copyData.findIndex(product => product.id === id);
-    copyData[findIndex] = {
-      ...copyData[findIndex],
-      count: copyData[findIndex].count - 1
-    };
-    axios.put("http://localhost:4000/products/" + id, copyData[findIndex])
-      .then(response => {
-        setMainData(copyData);
-      })
-      .catch(error => {
-        console.log(error);
-      });
-  }
-
+// Custom option component
+const CustomOption = (props) => {
   return (
-    <div className="App">
-      <h1>Product Form</h1>
-      <AddProductForm addProduct={addProduct} />
-      <ProductList
-        mainData={mainData}
-        deleteProduct={deleteProduct}
-        incrementCount={incrementCount}
-        decrementCount={decrementCount}
-      />
+    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+      <div>{props.data.label}</div>
+      <div>{`(+${props.data.code})`}</div>
     </div>
   );
-}
+};
 
-function AddProductForm({ addProduct }) {
-  const [formData, setFormData] = useState({ name: "", count: 0 })
+// Component
+const CountrySelect = () => {
+  const [selectedCountry, setSelectedCountry] = useState(null);
 
-  function handleChange(event) {
-    setFormData({
-      ...formData,
-      [event.target.name]: event.target.value
-    })
-  }
-
-  function handleSubmit(event) {
-    event.preventDefault();
-    const newProduct = { ...formData, id: uuidv4() };
-    addProduct(newProduct);
-    setFormData({ name: "", count: 0 });
-  }
-
-  return (
-    <div>
-      <div>Add Product Form</div>
-      <form onSubmit={handleSubmit}>
-        <label>
-          Product Name
-          <input name="name" value={formData.name} type='text' onChange={handleChange} />
-        </label>
-        <br />
-        <label>
-          Count
-          <input name="count" type='number' value={formData.count} onChange={handleChange} />
-        </label>
-        <br />
-        <button type='submit'>Save</button>
-      </form>
-    </div>
-  );
-}
-
-function ProductList({ mainData, deleteProduct, decrementCount, incrementCount }) {
-  return (
-    <div>
-      <h2>Product List</h2>
-      <ul>
-        {mainData.map((product) => (
-          <li key={product.id}>
-            {product.name} - {product.count}
-            <button onClick={() => incrementCount(product.id)}>+</button>
-            <button onClick={() => decrementCount(product.id)}>-</button>
-            <button onClick={() => deleteProduct(product.id)}>X</button>
-          </li>
-        ))}
-      </ul>
-    </div>
-  );
-}
-
-export default App;
-
-// Using find
-
-function incrementCount(id) {
-  const updatedProduct = mainData.find(product => product.id === id);
-  updatedProduct.count += 1;
-  axios.put(`http://localhost:4000/products/${id}`, updatedProduct)
-    .then(response => {
-      setMainData(mainData.map(product => product.id === id ? updatedProduct : product));
-    })
-    .catch(error => {
-      console.log(error);
+  const loadOptions = (inputValue, callback) => {
+    fetchCountries().then((countries) => {
+      const filteredCountries = countries.filter((country) =>
+        country.label.toLowerCase().includes(inputValue.toLowerCase())
+      );
+      callback(filteredCountries);
     });
-}
+  };
+
+  const handleChange = (selectedOption) => {
+    setSelectedCountry(selectedOption);
+  };
+
+  return (
+    <div>
+      <h3>Select a Country</h3>
+      <AsyncSelect
+        cacheOptions
+        loadOptions={loadOptions}
+        defaultOptions
+        onChange={handleChange}
+        value={selectedCountry}
+        placeholder="Search for a country"
+        components={{ Option: CustomOption }} // CustomOption
+      />
+      {selectedCountry && (
+        <div>
+          <h4>Selected Country:</h4>
+          <p>{`${selectedCountry.label} (+${selectedCountry.code})`}</p>
+        </div>
+      )}
+    </div>
+  );
+};
+
+// Home component
+const Home = () => {
+  return (
+    <div>
+      <h1>HOME</h1>
+      <h1>React Select Async Example</h1>
+      <div style={{ width: 400 }}>
+        <CountrySelect />
+      </div>
+    </div>
+  );
+};
+
+export default Home;
