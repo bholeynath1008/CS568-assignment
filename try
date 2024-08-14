@@ -180,3 +180,21 @@ const Home = () => {
 export default Home;
 
 ```
+------------------
+// Custom option component
+const CustomOption = (props) => {
+  return (
+    <div
+      style={{
+        display: 'flex',
+        justifyContent: 'space-between',
+        padding: '8px 16px', // Padding inside the container
+        alignItems: 'center',
+      }}
+    >
+      <div style={{ marginRight: '8px' }}>{props.data.label}</div>
+      <div style={{ textAlign: 'right', minWidth: '50px' }}>{`(+${props.data.code})`}</div>
+    </div>
+  );
+};
+
