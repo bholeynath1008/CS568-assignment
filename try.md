@@ -181,6 +181,7 @@ export default Home;
 
 ```
 ------------------
+```
 // Custom option component
 const CustomOption = (props) => {
   return (
@@ -197,6 +198,7 @@ const CustomOption = (props) => {
     </div>
   );
 };
+```
 
 ------------
 Input field
