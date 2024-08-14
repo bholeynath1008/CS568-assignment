@@ -1,3 +1,4 @@
+```
 import React, { useState } from 'react';
 import AsyncSelect from 'react-select/async';
 
@@ -77,3 +78,105 @@ const Home = () => {
 };
 
 export default Home;
+```
+
+----------
+no effect till 3rd character:
+---------------
+```
+import React, { useState, useEffect } from 'react';
+import AsyncSelect from 'react-select/async';
+
+// Mock API function to fetch countries
+const fetchCountries = async () => {
+  const response = await fetch('https://restcountries.com/v3.1/all');
+  const countries = await response.json();
+
+  // Extract the first 10 countries with their names and dialing codes
+  return countries.slice(0, 10).map((country) => ({
+    label: country.name.common,
+    value: country.cca2,
+    code: `${country.idd.root || ''}${country.idd.suffixes ? country.idd.suffixes[0] : ''}`
+  }));
+};
+
+// Custom option component
+const CustomOption = (props) => {
+  return (
+    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+      <div>{props.data.label}</div>
+      <div>{`(+${props.data.code})`}</div>
+    </div>
+  );
+};
+
+// Component
+const CountrySelect = () => {
+  const [countries, setCountries] = useState([]);
+  const [selectedCountry, setSelectedCountry] = useState(null);
+
+  // Fetch all countries when the component mounts
+  useEffect(() => {
+    const loadCountries = async () => {
+      const countryData = await fetchCountries();
+      setCountries(countryData);
+    };
+
+    loadCountries();
+  }, []);
+
+  const loadOptions = (inputValue, callback) => {
+    if (inputValue.length < 4) {
+      // Return the full list if input is less than 4 characters
+      callback(countries);
+    } else {
+      // Filter the list based on the input
+      const filteredCountries = countries.filter((country) =>
+        country.label.toLowerCase().includes(inputValue.toLowerCase())
+      );
+      callback(filteredCountries);
+    }
+  };
+
+  const handleChange = (selectedOption) => {
+    setSelectedCountry(selectedOption);
+  };
+
+  return (
+    <div>
+      <h3>Select a Country</h3>
+      <AsyncSelect
+        cacheOptions
+        loadOptions={loadOptions} 
+        defaultOptions={countries} // Load all countries initially
+        onChange={handleChange}
+        value={selectedCountry}
+        placeholder="Search for a country"
+        components={{ Option: CustomOption }} // Custom country
+      />
+      {selectedCountry && (
+        <div>
+          <h4>Selected Country:</h4>
+          <p>{`${selectedCountry.label} (+${selectedCountry.code})`}</p>
+        </div>
+      )}
+    </div>
+  );
+};
+
+// Home component
+const Home = () => {
+  return (
+    <div>
+      <h1>HOME</h1>
+      <h1>React Select Async Example</h1>
+      <div style={{ width: 400 }}>
+        <CountrySelect />
+      </div>
+    </div>
+  );
+};
+
+export default Home;
+
+```
