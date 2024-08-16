@@ -343,3 +343,155 @@ Popover Component:
 
 Each Popover checks if its ID matches openPopover to determine if it should be open.
 The anchorEl prop is set to the corresponding button to anchor the popover correctly.
+
+
+```
+import React, { useState } from 'react';
+import { DataGrid } from '@mui/x-data-grid';
+import { MenuItem, Select, FormControl, InputLabel, Button } from '@mui/material';
+import { css } from '@emotion/react';
+
+// Static data
+const staticData = [
+    { id: 1, name: 'John Doe', age: 12, gender: 'Male' },
+    { id: 2, name: 'Jane Smith', age: 13, gender: 'Female' },
+    { id: 3, name: 'Alice Johnson', age: 14, gender: 'Female' },
+    { id: 4, name: 'Bob Brown', age: 15, gender: 'Male' },
+    { id: 5, name: 'Charlie Davis', age: 12, gender: 'Male' },
+    { id: 6, name: 'Eva White', age: 13, gender: 'Female' },
+    { id: 7, name: 'Frank Black', age: 14, gender: 'Male' },
+    { id: 8, name: 'Grace Green', age: 15, gender: 'Female' },
+    { id: 9, name: 'Hannah Blue', age: 12, gender: 'Female' },
+    { id: 10, name: 'Isaac Grey', age: 13, gender: 'Male' },
+];
+
+const CustomDataGrid = () => {
+    const [rows, setRows] = useState(staticData);
+
+    const handleAgeChange = (id, newAge) => {
+        setRows((prevRows) => {
+            return prevRows.map((row) =>
+                row.id === id ? { ...row, age: newAge } : row
+            );
+        });
+    };
+
+    const handleDelete = (id) => {
+        setRows((prevRows) => prevRows.filter((row) => row.id !== id));
+    };
+
+    const columns = [
+        { field: 'name', headerName: 'Name', width: 150 },
+        {
+            field: 'age',
+            headerName: 'Age',
+            width: 150,
+            renderCell: (params) => (
+                <FormControl fullWidth size="small">
+                    <InputLabel id={`age-select-label-${params.id}`}>Age</InputLabel>
+                    <Select
+                        labelId={`age-select-label-${params.id}`}
+                        value={params.value}
+                        onChange={(event) => handleAgeChange(params.id, Number(event.target.value))}
+                        size="small"
+                        sx={{ boxShadow: 'none', '.MuiOutlinedInput-notchedOutline': { border: 0 } }}
+                    >
+                        {[12, 13, 14, 15].map((age) => (
+                            <MenuItem key={age} value={age}>
+                                {age}
+                            </MenuItem>
+                        ))}
+                    </Select>
+                </FormControl>
+            ),
+        },
+        { field: 'gender', headerName: 'Gender', width: 150 },
+        {
+            field: 'delete',
+            headerName: 'Delete',
+            width: 100,
+            renderCell: (params) => (
+                <Button 
+                    variant="contained" 
+                    color="secondary" 
+                    onClick={() => handleDelete(params.id)}
+                >
+                    Delete
+                </Button>
+            ),
+        },
+    ];
+
+    return (
+        <div style={{ height: 400, width: '100%' }}>
+            <DataGrid
+                rows={rows}
+                columns={columns}
+                pageSize={5}
+                rowsPerPageOptions={[5]}
+                disableSelectionOnClick
+            />
+        </div>
+    );
+};
+
+// Home component
+const Home = () => {
+    return (
+        <div>
+            <h1>HOME</h1>
+            <h1>React Select Example</h1>
+            <div
+                css={css`
+                    .MuiDataGrid-root .MuiDataGrid-cell:focus-within {
+                        outline: none !important;
+                    }
+                `}
+            >
+                <CustomDataGrid />
+            </div>
+        </div>
+    );
+};
+
+export default Home;
+
+
+
+
+/* 
+
+select#xyz {
+   border:0px;
+   outline:0px;
+}
+*/
+
+
+/* 
+import { Box } from '@mui/material'; // Import Box from Material-UI
+import CustomDataGrid from './CustomDataGrid'; // Adjust the import path as needed
+
+// Home component
+const Home = () => {
+    return (
+        <div>
+            <h1>HOME</h1>
+            <h1>React Select Example</h1>
+            <Box
+                sx={{
+                    '.MuiDataGrid-root .MuiDataGrid-cell:focus-within': {
+                        outline: 'none !important',
+                    },
+                }}
+            >
+                <CustomDataGrid />
+            </Box>
+        </div>
+    );
+};
+
+export default Home;
+
+*/
+```
