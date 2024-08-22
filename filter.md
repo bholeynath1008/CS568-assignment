@@ -144,6 +144,74 @@ const AsyncSelectExample = () => {
 export default AsyncSelectExample;
 
 ```
+
+```
+import React from 'react';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import AsyncSelectExample from 'Home.js'; // Adjust the path as necessary
+
+describe('AsyncSelectExample Component', () => {
+  it('should render the AsyncSelect component, filter options based on input, and allow selection', async () => {
+    render(<AsyncSelectExample />);
+
+    // Verify that the AsyncSelect component is rendered
+    const selectInput = screen.getByPlaceholderText('Search by name...');
+    expect(selectInput).toBeInTheDocument();
+
+    // Simulate typing "A" in the select input
+    fireEvent.change(selectInput, { target: { value: 'A' } });
+
+    // Wait for the options to load and be displayed
+    await waitFor(() => {
+      expect(screen.getByText('Alice, Age: 30')).toBeInTheDocument();
+      expect(screen.queryByText('Bob, Age: 25')).not.toBeInTheDocument(); // "Bob" shouldn't show up when typing "A"
+    });
+
+    // Simulate selecting "Alice"
+    fireEvent.click(screen.getByText('Alice, Age: 30'));
+
+    // Verify that Alice is selected and displayed in the selected users list
+    await waitFor(() => {
+      expect(screen.getByText('Alice, Age: 30')).toBeInTheDocument();
+    });
+
+    // Verify that Alice no longer appears in the options list when typing "A"
+    fireEvent.change(selectInput, { target: { value: 'A' } });
+    await waitFor(() => {
+      expect(screen.queryByText('Alice, Age: 30')).not.toBeInTheDocument();
+    });
+
+    // Simulate typing "B" in the select input
+    fireEvent.change(selectInput, { target: { value: 'B' } });
+
+    // Wait for the options to load and be displayed
+    await waitFor(() => {
+      expect(screen.getByText('Bob, Age: 25')).toBeInTheDocument();
+      expect(screen.queryByText('Alice, Age: 30')).not.toBeInTheDocument(); // "Alice" shouldn't show up when typing "B"
+    });
+
+    // Simulate selecting "Bob"
+    fireEvent.click(screen.getByText('Bob, Age: 25'));
+
+    // Verify that Bob is selected and displayed in the selected users list
+    await waitFor(() => {
+      expect(screen.getByText('Bob, Age: 25')).toBeInTheDocument();
+    });
+
+    // Verify that Bob no longer appears in the options list when typing "B"
+    fireEvent.change(selectInput, { target: { value: 'B' } });
+    await waitFor(() => {
+      expect(screen.queryByText('Bob, Age: 25')).not.toBeInTheDocument();
+    });
+
+    // Verify the selected users list shows both Alice and Bob
+    expect(screen.getByText('Selected Users:')).toBeInTheDocument();
+    expect(screen.getByText('Alice, Age: 30')).toBeInTheDocument();
+    expect(screen.getByText('Bob, Age: 25')).toBeInTheDocument();
+  });
+});
+
+```
 `Key Points:`
 `useCallback Hook:` The fetchOptions function is now wrapped with useCallback, which takes selectedOptionList as a dependency. This ensures that fetchOptions is always up-to-date with the latest selectedOptionList.
 
