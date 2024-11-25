@@ -15,3 +15,66 @@
 
 https://layout.bradwoods.io/customize
 https://readme.so/
+
+
+
+const CustomLinearProgressBar = ({ barValue }) => {
+  return (
+    <Box display="flex" alignItems="center" p={3} width="500px" height="100%">
+      <Box
+        sx={{
+          position: 'relative',
+          width: '100%',
+          height: 20,
+          background: 'linear-gradient(90deg, rgba(2,0,36,1) 40%, rgba(255,205,0,1) 60%, rgba(242,3,16,1) 100%)',
+          borderRadius: 5,
+          overflow: 'hidden',
+        }}
+      >
+        {/* Transparent background up to the barValue */}
+        <LinearProgress
+          variant="determinate"
+          value={100}
+          sx={{
+            height: '100%',
+            backgroundColor: 'transparent',
+            '& .MuiLinearProgress-bar': {
+              backgroundColor: 'transparent',
+            },
+          }}
+        />
+
+        {/* Green part that starts from barValue to 100 */}
+        <Box
+          sx={{
+            position: 'absolute',
+            top: 0,
+            left: `${barValue}%`, // Start the green color at the barValue position
+            width: `${100 - barValue}%`, // The green color fills from barValue to 100%
+            height: '100%',
+            backgroundColor: 'green',
+          }}
+        />
+
+        <Typography
+          variant="body2"
+          color="textSecondary"
+          sx={{
+            position: 'absolute',
+            width: '100%',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            textAlign: 'center',
+            fontWeight: 'bold',
+          }}
+        >
+          {`${Math.round(barValue)}%`}
+        </Typography>
+      </Box>
+    </Box>
+  );
+};
+
+export default CustomLinearProgressBar;
+
